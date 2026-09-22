@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android TV Shortcut Menu</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        h2 {
+            color: #4285F4;
+            margin-bottom: 50px;
+            font-size: 32px;
+        }
+        /* কার্ডগুলোর মেইন কন্টেইনার */
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        /* প্রতিটি কার্ড বা বাটনের ডিজাইন */
+        .card {
+            background-color: #1e1e1e;
+            border: 3px solid #333;
+            border-radius: 16px;
+            padding: 40px 20px;
+            width: 260px;
+            text-decoration: none;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            transition: all 0.2s ease-in-out;
+            /* অ্যান্ড্রয়েড টিভি রিমোট দিয়ে সিলেক্ট করার সময় ফোকাস পাওয়ার জন্য অত্যন্ত জরুরি */
+            outline: none;
+        }
+        /* টিভি রিমোট বা মাউস দিয়ে ফোকাস/হোভার করলে আকর্ষণীয় ডিজাইন ও জুম হবে */
+        .card:focus, .card:hover {
+            border-color: #4285F4;
+            background-color: #2a2a2a;
+            transform: scale(1.08);
+            box-shadow: 0 0 20px rgba(66, 133, 244, 0.6);
+        }
+    </style>
+</head>
+<body>
+
+    <h2>অ্যান্ড্রয়েড টিভি শর্টকাট মেনু</h2>
+
+    <!-- কার্ডসমূহ -->
+    <div class="cards-container">
+        
+        <!-- কার্ড ১: এখানে আপনার লিংক এবং নাম বসাবেন -->
+        <a href="https://www.youtube.com" class="card" target="_blank">
+            ইউটিউব (YouTube)
+        </a>
+
+        <!-- কার্ড ২: এখানে আপনার লিংক এবং নাম বসাবেন -->
+        <a href="https://www.google.com" class="card" target="_blank">
+            গুগল (Google)
+        </a>
+
+        <!-- কার্ড ৩: এখানে আপনার লিংক এবং নাম বসাবেন -->
+        <a href="https://example.com" class="card" target="_blank">
+            শর্টকাট লিংক ৩
+        </a>
+
+        <!-- কার্ড ৪: এখানে আপনার লিংক এবং নাম বসাবেন -->
+        <a href="https://example.com" class="card" target="_blank">
+            শর্টকাট লিংক ৪
+        </a>
+
+    </div>
+
+</body>
+</html>
