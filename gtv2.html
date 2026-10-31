@@ -1,0 +1,738 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOROLIPI TV Dashboard</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #001039;
+  color: white;
+  overflow: hidden;
+}
+
+.dashboard {
+  width: 100%;
+  height: 100vh;
+  padding: 2.2vh 2.2vw;
+  background:
+    radial-gradient(ellipse at 50% 40%, #092c80 0%, #001039 75%);
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  min-height: 13vh;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-shrink: 0;
+}
+
+.home {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  background: #0879ef;
+  display: grid;
+  place-items: center;
+  font-size: 43px;
+  text-decoration: none;
+  color: white;
+  flex-shrink: 0;
+}
+
+.brand {
+  font-size: clamp(23px, 3.5vw, 48px);
+  font-weight: bold;
+}
+
+.separator {
+  font-size: 48px;
+}
+
+.subtitle {
+  font-size: clamp(18px, 2.4vw, 34px);
+}
+
+.header-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.wifi {
+  width: 45px;
+  height: 45px;
+  color: #00aaff;
+}
+
+.wifi.offline {
+  color: #ff2525;
+}
+
+.clock {
+  font-size: clamp(20px, 2.4vw, 32px);
+  white-space: nowrap;
+}
+
+.settings {
+  font-size: 42px;
+  color: white;
+  text-decoration: none;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: minmax(150px, 30vh);
+  gap: 2.5vh 0.9vw;
+  margin-top: 2vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 8px 30px;
+  flex: 1;
+  align-content: start;
+  scrollbar-width: thin;
+  scrollbar-color: #087cff transparent;
+}
+
+.card {
+  min-width: 0;
+  border-radius: 24px;
+  text-decoration: none;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 4px solid transparent;
+  transition: transform .15s, box-shadow .15s;
+  cursor: pointer;
+  overflow: hidden;
+  padding: 12px;
+}
+
+.card.selected {
+  border-color: #ffe600;
+  box-shadow:
+    0 0 10px #ffe600,
+    0 0 25px #ffe600,
+    0 0 45px #ffca00;
+  transform: scale(1.025);
+  z-index: 2;
+}
+
+.card-icon {
+  width: clamp(50px, 6vw, 85px);
+  height: clamp(50px, 6vw, 85px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  font-size: clamp(40px, 6vw, 75px);
+}
+
+.card-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.card-title {
+  font-size: clamp(19px, 2.5vw, 37px);
+  font-weight: bold;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.card-subtitle {
+  font-size: clamp(13px, 1.9vw, 23px);
+  text-align: center;
+  margin-top: 5px;
+}
+
+.card::after {
+  content: "›";
+  position: absolute;
+  right: 8%;
+  top: 40%;
+  font-size: 48px;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+.blue { background: linear-gradient(135deg,#08a5ff,#0054d9); }
+.green { background: linear-gradient(135deg,#00e91b,#008b12); }
+.purple { background: linear-gradient(135deg,#bd00ff,#6700c8); }
+.orange { background: linear-gradient(135deg,#ffb000,#ff5100); }
+.cyan { background: linear-gradient(135deg,#00d8ec,#0089d9); }
+.pink { background: linear-gradient(135deg,#ff008d,#e50060); }
+.teal { background: linear-gradient(135deg,#00e7ac,#009c80); }
+.royal { background: linear-gradient(135deg,#287cff,#0738ef); }
+
+.bottom-wave {
+  position: fixed;
+  bottom: -100px;
+  left: -10%;
+  width: 120%;
+  height: 23vh;
+  border-top: 5px solid #087cff;
+  border-radius: 50% 50% 0 0;
+  box-shadow: 0 -10px 25px #004fff;
+  pointer-events: none;
+  opacity: .6;
+  z-index: 0;
+}
+
+.header, .card-grid {
+  position: relative;
+  z-index: 1;
+}
+
+@media(max-width:700px) {
+  body {
+    overflow: hidden;
+  }
+
+  .dashboard {
+    padding: 12px;
+  }
+
+  .header {
+    min-height: 75px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .home {
+    width: 42px;
+    height: 42px;
+    font-size: 25px;
+  }
+
+  .separator, .subtitle {
+    display: none;
+  }
+
+  .brand {
+    font-size: 23px;
+  }
+
+  .header-right {
+    gap: 12px;
+  }
+
+  .wifi, .settings {
+    font-size: 25px;
+    width: 28px;
+    height: 28px;
+  }
+
+  .clock {
+    font-size: 16px;
+  }
+
+  .card-grid {
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    grid-auto-rows: 145px;
+    gap: 14px;
+    margin-top: 12px;
+  }
+
+  .card {
+    border-radius: 15px;
+  }
+
+  .card-icon {
+    width: 42px;
+    height: 42px;
+    font-size: 40px;
+  }
+
+  .card-title {
+    font-size: 20px;
+  }
+
+  .card-subtitle {
+    font-size: 12px;
+  }
+
+  .card::after {
+    font-size: 30px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="dashboard" id="dashboard" tabindex="0">
+
+  <header class="header">
+
+    <a href="index.html" class="home">⌂</a>
+
+    <div class="brand">SOROLIPI</div>
+
+    <div class="separator">|</div>
+
+    <div class="subtitle">স্মার্ট তথ্য ব্যবস্থাপনা অ্যাপ</div>
+
+    <div class="header-right">
+
+      <div class="wifi" id="wifi" title="Network status">
+        <svg width="100%" height="100%"
+             viewBox="0 0 48 48"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="5"
+             stroke-linecap="round">
+          <path d="M4 17 Q24 -1 44 17"/>
+          <path d="M11 25 Q24 13 37 25"/>
+          <path d="M18 33 Q24 27 30 33"/>
+          <circle cx="24" cy="41" r="2" fill="currentColor"/>
+        </svg>
+      </div>
+
+      <div class="clock" id="clock">9:45 PM</div>
+
+      <a href="settings.html" class="settings">⚙</a>
+
+    </div>
+  </header>
+
+  <main class="card-grid" id="cardGrid"></main>
+
+</div>
+
+<div class="bottom-wave"></div>
+
+<script>
+
+// ======================================
+// ১. কার্ড তালিকা
+// ======================================
+
+const cards = [
+
+  {
+    title: "Gmail",
+    subtitle: "(জিমেইল ডাটা)",
+    icon: "✉️",
+    color: "blue",
+    url: "gmail.html"
+  },
+
+  {
+    title: "পরিবার",
+    subtitle: "(পারিবারিক তথ্য)",
+    icon: "👨‍👩‍👧‍👦",
+    color: "green",
+    url: "family.html"
+  },
+
+  {
+    title: "কর্মস্থল",
+    subtitle: "(কর্মসংস্থান তথ্য)",
+    icon: "💼",
+    color: "purple",
+    url: "work.html"
+  },
+
+  {
+    title: "লিংক",
+    subtitle: "(ভিডিও লিংক)",
+    icon: "🔗",
+    color: "orange",
+    url: "links.html"
+  },
+
+  {
+    title: "রিপোর্ট",
+    subtitle: "(সকল রিপোর্ট)",
+    icon: "📊",
+    color: "cyan",
+    url: "report.html"
+  },
+
+  {
+    title: "সেটিংস",
+    subtitle: "(সেটিংস)",
+    icon: "⚙️",
+    color: "pink",
+    url: "settings.html"
+  },
+
+  {
+    title: "ব্যাকআপ",
+    subtitle: "(ডাউনলোড/আপলোড)",
+    icon: "☁️",
+    color: "teal",
+    url: "backup.html"
+  },
+
+  {
+    title: "সহায়তা",
+    subtitle: "(সাহায্য নিন)",
+    icon: "ⓘ",
+    color: "royal",
+    url: "help.html"
+  }
+
+];
+
+// ======================================
+// ২. Icon: Emoji অথবা Image URL
+// ======================================
+
+function isImageUrl(value) {
+
+  return /^https?:\/\/.+/i.test(value);
+
+}
+
+function createIcon(value) {
+
+  const container = document.createElement("div");
+  container.className = "card-icon";
+
+  if (isImageUrl(value)) {
+
+    const img = document.createElement("img");
+
+    img.src = value;
+    img.alt = "Card Icon";
+    img.loading = "lazy";
+
+    img.onerror = function() {
+      this.style.display = "none";
+      container.textContent = "🖼️";
+    };
+
+    container.appendChild(img);
+
+  } else {
+
+    container.textContent = value || "📺";
+
+  }
+
+  return container;
+
+}
+
+// ======================================
+// ৩. কার্ড তৈরি
+// ======================================
+
+const grid = document.getElementById("cardGrid");
+
+let selectedIndex = 0;
+
+function renderCards() {
+
+  grid.innerHTML = "";
+
+  cards.forEach((card, index) => {
+
+    const element = document.createElement("a");
+
+    element.className = "card " + card.color;
+    element.href = card.url || "#";
+    element.dataset.index = index;
+
+    element.appendChild(createIcon(card.icon));
+
+    const title = document.createElement("div");
+    title.className = "card-title";
+    title.textContent = card.title;
+
+    const subtitle = document.createElement("div");
+    subtitle.className = "card-subtitle";
+    subtitle.textContent = card.subtitle || "";
+
+    element.appendChild(title);
+    element.appendChild(subtitle);
+
+    element.addEventListener("click", function(event) {
+
+      selectedIndex = index;
+      updateSelection();
+
+      if (!card.url || card.url === "#") {
+        event.preventDefault();
+      }
+
+    });
+
+    grid.appendChild(element);
+
+  });
+
+  selectedIndex = Math.min(
+    selectedIndex,
+    Math.max(0, cards.length - 1)
+  );
+
+  updateSelection();
+
+}
+
+// ======================================
+// ৪. নতুন কার্ড যোগ
+// ======================================
+
+function addNewCard(title, subtitle, icon, color, url) {
+
+  cards.push({
+    title: title,
+    subtitle: subtitle,
+    icon: icon,
+    color: color,
+    url: url
+  });
+
+  renderCards();
+
+}
+
+// অন্য পেজ থেকেও প্রয়োজন হলে ব্যবহার করা যাবে
+window.addNewCard = addNewCard;
+
+// ======================================
+// ৫. কার্ড নির্বাচন
+// ======================================
+
+function updateSelection() {
+
+  const elements = grid.querySelectorAll(".card");
+
+  elements.forEach((card, index) => {
+
+    card.classList.toggle(
+      "selected",
+      index === selectedIndex
+    );
+
+  });
+
+  const selected = elements[selectedIndex];
+
+  if (selected) {
+
+    selected.scrollIntoView({
+      block: "nearest",
+      inline: "nearest",
+      behavior: "smooth"
+    });
+
+  }
+
+}
+
+// ======================================
+// ৬. স্মার্ট Direction Navigation
+// ======================================
+
+function moveSelection(direction) {
+
+  const elements = [...grid.querySelectorAll(".card")];
+
+  const current = elements[selectedIndex];
+
+  if (!current) return;
+
+  const a = current.getBoundingClientRect();
+
+  const ax = a.left + a.width / 2;
+  const ay = a.top + a.height / 2;
+
+  let bestIndex = -1;
+  let bestScore = Infinity;
+
+  elements.forEach((element, index) => {
+
+    if (index === selectedIndex) return;
+
+    const b = element.getBoundingClientRect();
+
+    const bx = b.left + b.width / 2;
+    const by = b.top + b.height / 2;
+
+    const dx = bx - ax;
+    const dy = by - ay;
+
+    let forward = 0;
+    let sideways = 0;
+
+    if (direction === "ArrowRight") {
+      forward = dx;
+      sideways = Math.abs(dy);
+    }
+
+    if (direction === "ArrowLeft") {
+      forward = -dx;
+      sideways = Math.abs(dy);
+    }
+
+    if (direction === "ArrowDown") {
+      forward = dy;
+      sideways = Math.abs(dx);
+    }
+
+    if (direction === "ArrowUp") {
+      forward = -dy;
+      sideways = Math.abs(dx);
+    }
+
+    if (forward <= 0) return;
+
+    const score = forward + sideways * 2.5;
+
+    if (score < bestScore) {
+
+      bestScore = score;
+      bestIndex = index;
+
+    }
+
+  });
+
+  if (bestIndex !== -1) {
+
+    selectedIndex = bestIndex;
+    updateSelection();
+
+  }
+
+}
+
+// ======================================
+// ৭. Google TV Remote Control
+// ======================================
+
+document.addEventListener("keydown", function(event) {
+
+  const key = event.key;
+
+  if (
+    ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"]
+    .includes(key)
+  ) {
+
+    event.preventDefault();
+    moveSelection(key);
+
+  }
+
+  else if (key === "Enter" || key === " ") {
+
+    event.preventDefault();
+
+    const selected = cards[selectedIndex];
+
+    if (selected && selected.url) {
+
+      window.location.href = selected.url;
+
+    }
+
+  }
+
+  else if (
+    key === "Escape" ||
+    key === "Backspace" ||
+    key === "BrowserBack" ||
+    key === "GoBack" ||
+    event.keyCode === 4 ||
+    event.keyCode === 10009
+  ) {
+
+    event.preventDefault();
+
+    if (history.length > 1) {
+      history.back();
+    }
+
+  }
+
+});
+
+// ======================================
+// ৮. Wi-Fi / Network Status
+// ======================================
+
+const wifi = document.getElementById("wifi");
+
+function updateWifi() {
+
+  if (navigator.onLine) {
+
+    wifi.classList.remove("offline");
+    wifi.title = "Connected";
+
+  } else {
+
+    wifi.classList.add("offline");
+    wifi.title = "Disconnected";
+
+  }
+
+}
+
+window.addEventListener("online", updateWifi);
+window.addEventListener("offline", updateWifi);
+
+updateWifi();
+
+// ======================================
+// ৯. ঘড়ি
+// ======================================
+
+function updateClock() {
+
+  const now = new Date();
+
+  const time = now.toLocaleTimeString("en-US", {
+
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true
+
+  });
+
+  document.getElementById("clock").textContent = time;
+
+}
+
+updateClock();
+
+setInterval(updateClock, 1000);
+
+// ======================================
+// ১০. শুরু
+// ======================================
+
+renderCards();
+
+window.addEventListener("load", function() {
+
+  document.getElementById("dashboard").focus();
+
+});
+
+</script>
+
+</body>
+</html>
