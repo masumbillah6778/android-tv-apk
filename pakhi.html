@@ -1,5 +1,45 @@
+<style>
+  .clock {
+  font-size: clamp(20px, 2.4vw, 32px);
+  white-space: nowrap;
+}
+</style>
+
+
 <div colspan="2" class="video-player">
 <video controls loop controlslist="nodownload" controls="" _autoplay="" name="media" oncontextmenu="return false;">
 <source src="https://masumbillah6778bd.github.io/music-lyrics/music/amar-mon-pakhi.mp3" type="audio/mpeg" />
 </video>
 </div>
+
+
+
+<script>
+function updateClock() {
+
+  const now = new Date();
+
+  const time = now.toLocaleTimeString("en-US", {
+
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true
+
+  });
+
+  document.getElementById("clock").textContent = time;
+
+}
+
+updateClock();
+
+setInterval(updateClock, 1000);
+
+</script>
+
+
+
+
+
+
+  
