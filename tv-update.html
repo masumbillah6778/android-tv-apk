@@ -1,0 +1,1347 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google TV</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #001039;
+  color: white;
+  overflow: hidden;
+}
+
+.dashboard {
+  width: 100%;
+  height: 100vh;
+  padding: 2.2vh 2.2vw;
+  background: radial-gradient(ellipse at 50% 40%, #092c80 0%, #001039 75%);
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  min-height: 13vh;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-shrink: 0;
+}
+
+.home {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  background: #0879ef;
+  display: grid;
+  place-items: center;
+  font-size: 43px;
+  text-decoration: none;
+  color: white;
+  flex-shrink: 0;
+}
+
+.brand {
+  font-size: clamp(23px, 3.5vw, 48px);
+  font-weight: bold;
+}
+
+.separator { font-size: 48px; }
+
+.subtitle { font-size: clamp(18px, 2.4vw, 34px); }
+
+.header-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.wifi {
+  width: 45px;
+  height: 45px;
+  color: #00aaff;
+}
+
+.wifi.offline { color: #ff2525; }
+
+.clock {
+  font-size: clamp(20px, 2.4vw, 32px);
+  white-space: nowrap;
+}
+
+.settings {
+  font-size: 42px;
+  color: white;
+  text-decoration: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: minmax(150px, 30vh);
+  gap: 2.5vh 0.9vw;
+  margin-top: 2vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 8px 30px;
+  flex: 1;
+  align-content: start;
+  scrollbar-width: thin;
+  scrollbar-color: #087cff transparent;
+}
+
+.card {
+  min-width: 0;
+  border-radius: 24px;
+  text-decoration: none;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 4px solid transparent;
+  transition: transform .15s, box-shadow .15s;
+  cursor: pointer;
+  overflow: hidden;
+  padding: 12px;
+}
+
+.card.selected {
+  border-color: #ffe600;
+  box-shadow: 0 0 10px #ffe600, 0 0 25px #ffe600, 0 0 45px #ffca00;
+  transform: scale(1.025);
+  z-index: 2;
+}
+
+.card-icon {
+  width: clamp(50px, 6vw, 85px);
+  height: clamp(50px, 6vw, 85px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  font-size: clamp(40px, 6vw, 75px);
+}
+
+.card-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.card-title {
+  font-size: clamp(19px, 2.5vw, 37px);
+  font-weight: bold;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.card-subtitle {
+  font-size: clamp(13px, 1.9vw, 23px);
+  text-align: center;
+  margin-top: 5px;
+}
+
+.card::after {
+  content: "›";
+  position: absolute;
+  right: 8%;
+  top: 40%;
+  font-size: 48px;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+.card-lock {
+  position: absolute;
+  top: 9px;
+  left: 10px;
+  z-index: 3;
+  border: 0;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  background: rgba(0,0,0,.35);
+  color: white;
+  font-size: 21px;
+  cursor: pointer;
+}
+
+.blue { background: linear-gradient(135deg,#08a5ff,#0054d9); }
+.green { background: linear-gradient(135deg,#00e91b,#008b12); }
+.purple { background: linear-gradient(135deg,#bd00ff,#6700c8); }
+.orange { background: linear-gradient(135deg,#ffb000,#ff5100); }
+.cyan { background: linear-gradient(135deg,#00d8ec,#0089d9); }
+.pink { background: linear-gradient(135deg,#ff008d,#e50060); }
+.teal { background: linear-gradient(135deg,#00e7ac,#009c80); }
+.royal { background: linear-gradient(135deg,#287cff,#0738ef); }
+
+.bottom-wave {
+  position: fixed;
+  bottom: -100px;
+  left: -10%;
+  width: 120%;
+  height: 23vh;
+  border-top: 5px solid #087cff;
+  border-radius: 50% 50% 0 0;
+  box-shadow: 0 -10px 25px #004fff;
+  pointer-events: none;
+  opacity: .6;
+  z-index: 0;
+}
+
+.header, .card-grid {
+  position: relative;
+  z-index: 1;
+}
+
+/* সব Modal */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0,0,0,.78);
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+}
+
+.modal.show { display: flex; }
+
+.modal-box {
+  width: min(600px, 96vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: linear-gradient(145deg,#103d91,#061638);
+  border: 2px solid #168cff;
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 0 30px rgba(0,140,255,.4);
+}
+
+.modal-box.wide { width: min(1050px, 96vw); }
+
+.modal-title {
+  text-align: center;
+  font-size: 27px;
+  font-weight: bold;
+  margin-bottom: 18px;
+}
+
+.close-btn {
+  float: right;
+  border: 0;
+  background: #e53935;
+  color: white;
+  border-radius: 8px;
+  font-size: 23px;
+  padding: 4px 12px;
+  cursor: pointer;
+}
+
+.field-label {
+  display: block;
+  margin: 12px 0 6px;
+  font-size: 16px;
+}
+
+.field {
+  width: 100%;
+  padding: 13px;
+  border: 2px solid #398bff;
+  border-radius: 10px;
+  background: #fff;
+  color: #111;
+  font-size: 17px;
+  outline: none;
+}
+
+.password-wrap {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 10px;
+  border: 2px solid #398bff;
+  overflow: hidden;
+}
+
+.password-wrap .field {
+  border: 0;
+  border-radius: 0;
+}
+
+.eye-btn {
+  border: 0;
+  background: white;
+  color: #111;
+  font-size: 24px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 22px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+}
+
+.save-btn { background: #00a846; }
+.cancel-btn { background: #687386; }
+.delete-btn { background: #e53935; }
+
+.error-message {
+  color: #ff3434;
+  font-size: 17px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 12px;
+  min-height: 23px;
+}
+
+.confirm-text {
+  text-align: center;
+  font-size: 20px;
+  line-height: 1.6;
+}
+
+/* Settings menu */
+.settings-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.menu-option {
+  width: 100%;
+  border: 2px solid rgba(255,255,255,.3);
+  border-radius: 14px;
+  padding: 18px 15px;
+  color: white;
+  font-size: 21px;
+  font-weight: bold;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.menu-option.add-option {
+  background: linear-gradient(135deg,#0879ef,#0045a9);
+}
+
+.menu-option.detail-option {
+  background: linear-gradient(135deg,#8c20e8,#4b078f);
+}
+
+.menu-option:focus,
+.action-btn:focus,
+.card-lock:focus,
+.settings:focus {
+  outline: 3px solid #ffe600;
+}
+
+/* Table */
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 650px;
+  background: rgba(0,0,0,.15);
+}
+
+th, td {
+  border: 1px solid rgba(255,255,255,.3);
+  padding: 11px 8px;
+  text-align: center;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+th { background: #0879ef; }
+
+.table-action {
+  border: 0;
+  border-radius: 7px;
+  padding: 6px 9px;
+  margin: 2px;
+  font-size: 22px;
+  background: rgba(255,255,255,.15);
+  cursor: pointer;
+}
+
+@media(max-width:700px) {
+  body { overflow: hidden; }
+
+  .dashboard { padding: 12px; }
+
+  .header {
+    min-height: 75px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .home {
+    width: 42px;
+    height: 42px;
+    font-size: 25px;
+  }
+
+  .separator, .subtitle { display: none; }
+
+  .brand { font-size: 23px; }
+
+  .header-right { gap: 12px; }
+
+  .wifi, .settings {
+    font-size: 25px;
+    width: 28px;
+    height: 28px;
+  }
+
+  .clock { font-size: 16px; }
+
+  .card-grid {
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    grid-auto-rows: 145px;
+    gap: 14px;
+    margin-top: 12px;
+  }
+
+  .card { border-radius: 15px; }
+
+  .card-icon {
+    width: 42px;
+    height: 42px;
+    font-size: 40px;
+  }
+
+  .card-title { font-size: 20px; }
+  .card-subtitle { font-size: 12px; }
+  .card::after { font-size: 30px; }
+
+  .card-lock {
+    width: 30px;
+    height: 30px;
+    font-size: 17px;
+  }
+
+  .modal-box { padding: 15px; }
+  .modal-title { font-size: 22px; }
+  .menu-option { font-size: 18px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="dashboard" id="dashboard" tabindex="0">
+
+  <header class="header">
+
+    <a href="index.html" class="home">⌂</a>
+
+    <div class="brand">Google TV</div>
+    <div class="separator">|</div>
+    <div class="subtitle">স্মার্ট তথ্য ব্যবস্থাপনা অ্যাপ</div>
+
+    <div class="header-right">
+
+      <div class="wifi" id="wifi" title="Network status">
+        <svg width="100%" height="100%" viewBox="0 0 48 48"
+             fill="none" stroke="currentColor" stroke-width="5"
+             stroke-linecap="round">
+          <path d="M4 17 Q24 -1 44 17"/>
+          <path d="M11 25 Q24 13 37 25"/>
+          <path d="M18 33 Q24 27 30 33"/>
+          <circle cx="24" cy="41" r="2" fill="currentColor"/>
+        </svg>
+      </div>
+
+      <div class="clock" id="clock">9:45 PM</div>
+
+      <button class="settings" onclick="openSettingsMenu()" title="সেটিংস">⚙</button>
+
+    </div>
+  </header>
+
+  <main class="card-grid" id="cardGrid"></main>
+
+</div>
+
+<div class="bottom-wave"></div>
+
+<!-- Settings Menu -->
+<div class="modal" id="settingsModal">
+  <div class="modal-box">
+    <button class="close-btn" onclick="closeModal('settingsModal')">✕</button>
+
+    <div class="modal-title">⚙️ সেটিংস মেনু</div>
+
+    <div class="settings-menu">
+
+      <button class="menu-option add-option" onclick="openAddModal()">
+        <span>➕</span>
+        <span>কার্ড যুক্ত করুন</span>
+      </button>
+
+      <button class="menu-option detail-option" onclick="openTable()">
+        <span>📋</span>
+        <span>সকল কার্ডের বিস্তারিত</span>
+      </button>
+
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Card Modal -->
+<div class="modal" id="cardModal">
+  <div class="modal-box">
+    <button class="close-btn" onclick="closeModal('cardModal')">✕</button>
+
+    <div class="modal-title" id="cardModalTitle">নতুন কার্ড যোগ করুন</div>
+
+    <label class="field-label">কার্ডের নাম</label>
+    <input class="field" id="cardName" placeholder="কার্ডের নাম লিখুন">
+
+    <label class="field-label">সাবটাইটেল</label>
+    <input class="field" id="cardSubtitle" placeholder="কার্ডের নিচের লেখা">
+
+    <label class="field-label">আইকন / JPG / PNG ছবির URL</label>
+    <input class="field" id="cardIcon" placeholder="যেমন: 📺 অথবা https://...">
+
+    <label class="field-label">কার্ডের রং</label>
+    <select class="field" id="cardColor">
+      <option value="blue">নীল</option>
+      <option value="green">সবুজ</option>
+      <option value="purple">বেগুনি</option>
+      <option value="orange">কমলা</option>
+      <option value="cyan">আকাশি</option>
+      <option value="pink">গোলাপি</option>
+      <option value="teal">টিল</option>
+      <option value="royal">রয়েল ব্লু</option>
+    </select>
+
+    <label class="field-label">কার্ডের লিংক / URL</label>
+    <input class="field" id="cardUrl" placeholder="https:// অথবা page.html">
+
+    <div class="modal-buttons">
+      <button class="action-btn save-btn" onclick="saveCard()">💾 সংরক্ষণ</button>
+      <button class="action-btn cancel-btn" onclick="closeModal('cardModal')">বাতিল</button>
+    </div>
+  </div>
+</div>
+
+<!-- Password Setup Modal -->
+<div class="modal" id="setPasswordModal">
+  <div class="modal-box">
+    <button class="close-btn" onclick="closeModal('setPasswordModal')">✕</button>
+
+    <div class="modal-title">🔒 কার্ডের পাসওয়ার্ড সেটিং</div>
+
+    <div id="passwordCardName" style="text-align:center;font-size:19px;"></div>
+
+    <label class="field-label">নতুন পাসওয়ার্ড</label>
+
+    <div class="password-wrap">
+      <input class="field" id="newCardPassword" type="password"
+             placeholder="পাসওয়ার্ড লিখুন">
+      <button class="eye-btn" type="button"
+              onclick="togglePassword('newCardPassword',this)">👁️</button>
+    </div>
+
+    <div style="font-size:13px;color:#cbdcff;margin-top:8px;">
+      পাসওয়ার্ড খালি রাখলে এই কার্ডে প্রবেশ করতে পাসওয়ার্ড লাগবে না।
+    </div>
+
+    <div class="modal-buttons">
+      <button class="action-btn save-btn" onclick="saveCardPassword()">💾 সংরক্ষণ</button>
+      <button class="action-btn cancel-btn" onclick="closeModal('setPasswordModal')">বাতিল</button>
+    </div>
+  </div>
+</div>
+
+<!-- Enter Password Modal -->
+<div class="modal" id="enterPasswordModal">
+  <div class="modal-box">
+    <div class="modal-title">🔐 পাসওয়ার্ড প্রয়োজন</div>
+
+    <div id="enterPasswordCardName" style="text-align:center;font-size:19px;"></div>
+
+    <label class="field-label">পাসওয়ার্ড লিখুন</label>
+
+    <div class="password-wrap">
+      <input class="field" id="enterCardPassword" type="password"
+             placeholder="আপনার পাসওয়ার্ড">
+      <button class="eye-btn" type="button"
+              onclick="togglePassword('enterCardPassword',this)">👁️</button>
+    </div>
+
+    <div class="error-message" id="passwordError"></div>
+
+    <div class="modal-buttons">
+      <button class="action-btn save-btn" onclick="checkCardPassword()">প্রবেশ করুন</button>
+      <button class="action-btn cancel-btn" onclick="closeModal('enterPasswordModal')">বাতিল</button>
+    </div>
+  </div>
+</div>
+
+<!-- Card Table Modal -->
+<div class="modal" id="tableModal">
+  <div class="modal-box wide">
+    <button class="close-btn" onclick="closeModal('tableModal')">✕</button>
+
+    <div class="modal-title">📋 সকল কার্ডের বিস্তারিত</div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>নং</th>
+            <th>আইকন</th>
+            <th>কার্ডের নাম</th>
+            <th>সাবটাইটেল</th>
+            <th>লিংক</th>
+            <th>পাসওয়ার্ড</th>
+            <th>অ্যাকশন</th>
+          </tr>
+        </thead>
+        <tbody id="cardTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation -->
+<div class="modal" id="deleteModal">
+  <div class="modal-box">
+    <div class="modal-title">⚠️ নিশ্চিত করুন</div>
+
+    <div class="confirm-text">
+      আপনি কি এই কার্ডটি ডিলিট করতে চান?
+      <div id="deleteCardName" style="font-weight:bold;color:#ffe600;margin-top:8px;"></div>
+    </div>
+
+    <div class="modal-buttons">
+      <button class="action-btn delete-btn" onclick="confirmDelete()">হ্যাঁ</button>
+      <button class="action-btn cancel-btn" onclick="cancelDelete()">না</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ======================================
+// ১. কার্ড তালিকা
+// ======================================
+
+const defaultCards = [
+  {
+    title: "Gmail",
+    subtitle: "(জিমেইল ডাটা)",
+    icon: "✉️",
+    color: "blue",
+    url: "https://masumbillah6778.github.io/android-tv-apk/amar-mon.html"
+  },
+  {
+    title: "পরিবার",
+    subtitle: "(পারিবারিক তথ্য)",
+    icon: "👨‍👩‍👧‍👦",
+    color: "green",
+    url: "https://masumbillah6778.github.io/android-tv-apk/pakhi.html"
+  },
+  {
+    title: "কর্মস্থল",
+    subtitle: "(কর্মসংস্থান তথ্য)",
+    icon: "💼",
+    color: "purple",
+    url: "https://masumbillah6778.github.io/html/music-player.html"
+  },
+  {
+    title: "লিংক",
+    subtitle: "(ভিডিও লিংক)",
+    icon: "🔗",
+    color: "orange",
+    url: "https://masumbillah6778.github.io/android-tv-apk/amar-mon-pakhi.html"
+  },
+  {
+    title: "রিপোর্ট",
+    subtitle: "(সকল রিপোর্ট)",
+    icon: "📊",
+    color: "cyan",
+    url: "https://masumbillah6778.github.io/android-tv-apk/tv.html"
+  },
+  {
+    title: "সেটিংস",
+    subtitle: "(সেটিংস)",
+    icon: "⚙️",
+    color: "pink",
+    url: "https://masumbillah6778.github.io/android-tv-apk/tv.html"
+  },
+  {
+    title: "ব্যাকআপ",
+    subtitle: "(ডাউনলোড/আপলোড)",
+    icon: "☁️",
+    color: "teal",
+    url: "backup.html"
+  },
+  {
+    title: "সহায়তা",
+    subtitle: "(সাহায্য নিন)",
+    icon: "ⓘ",
+    color: "royal",
+    url: "help.html"
+  }
+];
+
+let cards = [];
+
+try {
+  const saved = localStorage.getItem("google_tv_dashboard_cards_v1");
+
+  cards = saved
+    ? JSON.parse(saved)
+    : defaultCards.map(card => ({...card, password: ""}));
+
+  if (!Array.isArray(cards)) {
+    cards = defaultCards.map(card => ({...card, password: ""}));
+  }
+} catch (error) {
+  cards = defaultCards.map(card => ({...card, password: ""}));
+}
+
+let selectedIndex = 0;
+let editingIndex = -1;
+let passwordCardIndex = -1;
+let openingCardIndex = -1;
+let deletingIndex = -1;
+
+// ======================================
+// ২. ডাটা সংরক্ষণ
+// ======================================
+
+function saveToStorage() {
+  localStorage.setItem(
+    "google_tv_dashboard_cards_v1",
+    JSON.stringify(cards)
+  );
+}
+
+// ======================================
+// ৩. Modal নিয়ন্ত্রণ
+// ======================================
+
+function openModal(id) {
+  document.getElementById(id).classList.add("show");
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove("show");
+}
+
+// ======================================
+// ৪. Settings Menu
+// ======================================
+
+function openSettingsMenu() {
+  openModal("settingsModal");
+}
+
+// ======================================
+// ৫. Password Eye
+// ======================================
+
+function togglePassword(inputId, button) {
+  const input = document.getElementById(inputId);
+
+  if (input.type === "password") {
+    input.type = "text";
+    button.textContent = "🙈";
+  } else {
+    input.type = "password";
+    button.textContent = "👁️";
+  }
+}
+
+// ======================================
+// ৬. Icon: Emoji অথবা Image URL
+// ======================================
+
+function isImageUrl(value) {
+  return /^https?:\/\/.+/i.test(value || "");
+}
+
+function createIcon(value) {
+  const container = document.createElement("div");
+  container.className = "card-icon";
+
+  if (isImageUrl(value)) {
+    const img = document.createElement("img");
+    img.src = value;
+    img.alt = "Card Icon";
+    img.loading = "lazy";
+
+    img.onerror = function() {
+      this.style.display = "none";
+      container.textContent = "🖼️";
+    };
+
+    container.appendChild(img);
+  } else {
+    container.textContent = value || "📺";
+  }
+
+  return container;
+}
+
+// ======================================
+// ৭. কার্ড তৈরি
+// ======================================
+
+const grid = document.getElementById("cardGrid");
+
+function renderCards() {
+  grid.innerHTML = "";
+
+  cards.forEach((card, index) => {
+    const element = document.createElement("div");
+
+    element.className = "card " + (card.color || "blue");
+    element.dataset.index = index;
+
+    element.appendChild(createIcon(card.icon));
+
+    const title = document.createElement("div");
+    title.className = "card-title";
+    title.textContent = card.title;
+
+    const subtitle = document.createElement("div");
+    subtitle.className = "card-subtitle";
+    subtitle.textContent = card.subtitle || "";
+
+    element.appendChild(title);
+    element.appendChild(subtitle);
+
+    const lock = document.createElement("button");
+    lock.className = "card-lock";
+    lock.type = "button";
+    lock.textContent = card.password ? "🔒" : "🔓";
+    lock.title = "পাসওয়ার্ড সেটিং";
+
+    lock.addEventListener("click", function(event) {
+      event.stopPropagation();
+      openPasswordSettings(index);
+    });
+
+    element.appendChild(lock);
+
+    element.addEventListener("click", function() {
+      selectedIndex = index;
+      updateSelection();
+      openCard(index);
+    });
+
+    grid.appendChild(element);
+  });
+
+  selectedIndex = Math.min(selectedIndex, Math.max(0, cards.length - 1));
+  updateSelection();
+}
+
+// ======================================
+// ৮. নতুন কার্ড যোগ
+// ======================================
+
+function openAddModal() {
+  closeModal("settingsModal");
+
+  editingIndex = -1;
+
+  document.getElementById("cardModalTitle").textContent = "নতুন কার্ড যোগ করুন";
+  document.getElementById("cardName").value = "";
+  document.getElementById("cardSubtitle").value = "";
+  document.getElementById("cardIcon").value = "📺";
+  document.getElementById("cardColor").value = "blue";
+  document.getElementById("cardUrl").value = "";
+
+  openModal("cardModal");
+}
+
+function saveCard() {
+  const title = document.getElementById("cardName").value.trim();
+  const subtitle = document.getElementById("cardSubtitle").value.trim();
+  const icon = document.getElementById("cardIcon").value.trim() || "📺";
+  const color = document.getElementById("cardColor").value;
+  const url = document.getElementById("cardUrl").value.trim();
+
+  if (!title) {
+    alert("কার্ডের নাম লিখুন");
+    return;
+  }
+
+  const newCard = {
+    title,
+    subtitle,
+    icon,
+    color,
+    url,
+    password: editingIndex >= 0
+      ? (cards[editingIndex].password || "")
+      : ""
+  };
+
+  if (editingIndex >= 0) {
+    cards[editingIndex] = newCard;
+  } else {
+    cards.push(newCard);
+    selectedIndex = cards.length - 1;
+  }
+
+  saveToStorage();
+  renderCards();
+  renderTable();
+  closeModal("cardModal");
+}
+
+// ======================================
+// ৯. কার্ডের পাসওয়ার্ড সেটিং
+// ======================================
+
+function openPasswordSettings(index) {
+  passwordCardIndex = index;
+
+  document.getElementById("passwordCardName").textContent =
+    "কার্ড: " + cards[index].title;
+
+  document.getElementById("newCardPassword").value = "";
+  document.getElementById("newCardPassword").type = "password";
+
+  openModal("setPasswordModal");
+}
+
+function saveCardPassword() {
+  if (passwordCardIndex < 0 || !cards[passwordCardIndex]) return;
+
+  const password = document.getElementById("newCardPassword").value;
+
+  cards[passwordCardIndex].password = password;
+
+  saveToStorage();
+  renderCards();
+  renderTable();
+  closeModal("setPasswordModal");
+}
+
+// ======================================
+// ১০. কার্ডে প্রবেশ
+// ======================================
+
+function openCard(index) {
+  const card = cards[index];
+
+  if (!card) return;
+
+  if (!card.password) {
+    navigateToCard(index);
+    return;
+  }
+
+  openingCardIndex = index;
+
+  document.getElementById("enterPasswordCardName").textContent =
+    "কার্ড: " + card.title;
+
+  document.getElementById("enterCardPassword").value = "";
+  document.getElementById("enterCardPassword").type = "password";
+  document.getElementById("passwordError").textContent = "";
+
+  openModal("enterPasswordModal");
+
+  setTimeout(() => {
+    document.getElementById("enterCardPassword").focus();
+  }, 150);
+}
+
+function checkCardPassword() {
+  if (openingCardIndex < 0 || !cards[openingCardIndex]) return;
+
+  const entered = document.getElementById("enterCardPassword").value;
+  const correct = cards[openingCardIndex].password;
+
+  if (entered === correct) {
+    closeModal("enterPasswordModal");
+    navigateToCard(openingCardIndex);
+  } else {
+    const message = "আপনি ভুল পাসওয়ার্ড দিয়েছেন";
+
+    document.getElementById("passwordError").textContent = message;
+
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+
+      const speech = new SpeechSynthesisUtterance(message);
+      speech.lang = "bn-BD";
+      speech.rate = 0.9;
+
+      window.speechSynthesis.speak(speech);
+    }
+
+    document.getElementById("enterCardPassword").value = "";
+    document.getElementById("enterCardPassword").focus();
+  }
+}
+
+document.getElementById("enterCardPassword").addEventListener("keydown", function(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    checkCardPassword();
+  }
+});
+
+function navigateToCard(index) {
+  const card = cards[index];
+
+  if (card && card.url && card.url !== "#") {
+    window.location.href = card.url;
+  }
+}
+
+// ======================================
+// ১১. কার্ড নির্বাচন
+// ======================================
+
+function updateSelection() {
+  const elements = grid.querySelectorAll(".card");
+
+  elements.forEach((card, index) => {
+    card.classList.toggle("selected", index === selectedIndex);
+  });
+
+  const selected = elements[selectedIndex];
+
+  if (selected) {
+    selected.scrollIntoView({
+      block: "nearest",
+      inline: "nearest",
+      behavior: "smooth"
+    });
+  }
+}
+
+// ======================================
+// ১২. Direction Navigation
+// ======================================
+
+function moveSelection(direction) {
+  const elements = [...grid.querySelectorAll(".card")];
+  const current = elements[selectedIndex];
+
+  if (!current) return;
+
+  const a = current.getBoundingClientRect();
+  const ax = a.left + a.width / 2;
+  const ay = a.top + a.height / 2;
+
+  let bestIndex = -1;
+  let bestScore = Infinity;
+
+  elements.forEach((element, index) => {
+    if (index === selectedIndex) return;
+
+    const b = element.getBoundingClientRect();
+    const bx = b.left + b.width / 2;
+    const by = b.top + b.height / 2;
+
+    const dx = bx - ax;
+    const dy = by - ay;
+
+    let forward = 0;
+    let sideways = 0;
+
+    if (direction === "ArrowRight") {
+      forward = dx;
+      sideways = Math.abs(dy);
+    }
+
+    if (direction === "ArrowLeft") {
+      forward = -dx;
+      sideways = Math.abs(dy);
+    }
+
+    if (direction === "ArrowDown") {
+      forward = dy;
+      sideways = Math.abs(dx);
+    }
+
+    if (direction === "ArrowUp") {
+      forward = -dy;
+      sideways = Math.abs(dx);
+    }
+
+    if (forward <= 0) return;
+
+    const score = forward + sideways * 2.5;
+
+    if (score < bestScore) {
+      bestScore = score;
+      bestIndex = index;
+    }
+  });
+
+  if (bestIndex !== -1) {
+    selectedIndex = bestIndex;
+    updateSelection();
+  }
+}
+
+// ======================================
+// ১৩. সকল কার্ডের বিস্তারিত টেবিল
+// ======================================
+
+function renderTable() {
+  const tbody = document.getElementById("cardTableBody");
+  tbody.innerHTML = "";
+
+  cards.forEach((card, index) => {
+    const tr = document.createElement("tr");
+
+    const values = [
+      index + 1,
+      card.icon || "📺",
+      card.title,
+      card.subtitle || "",
+      card.url || "",
+      card.password ? "🔒 সেট করা আছে" : "🔓 নেই"
+    ];
+
+    values.forEach(value => {
+      const td = document.createElement("td");
+      td.textContent = value;
+      tr.appendChild(td);
+    });
+
+    const actionTd = document.createElement("td");
+
+    const viewBtn = document.createElement("button");
+    viewBtn.className = "table-action";
+    viewBtn.textContent = "👁️";
+    viewBtn.title = "কার্ড খুলুন";
+
+    viewBtn.onclick = () => {
+      closeModal("tableModal");
+      selectedIndex = index;
+      updateSelection();
+      openCard(index);
+    };
+
+    const editBtn = document.createElement("button");
+    editBtn.className = "table-action";
+    editBtn.textContent = "✏️";
+    editBtn.title = "সম্পাদনা";
+    editBtn.onclick = () => editCard(index);
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "table-action";
+    deleteBtn.textContent = "🗑️";
+    deleteBtn.title = "ডিলিট";
+    deleteBtn.onclick = () => askDelete(index);
+
+    actionTd.appendChild(viewBtn);
+    actionTd.appendChild(editBtn);
+    actionTd.appendChild(deleteBtn);
+
+    tr.appendChild(actionTd);
+    tbody.appendChild(tr);
+  });
+}
+
+function openTable() {
+  closeModal("settingsModal");
+  renderTable();
+  openModal("tableModal");
+}
+
+// ======================================
+// ১৪. কার্ড সম্পাদনা
+// ======================================
+
+function editCard(index) {
+  editingIndex = index;
+
+  const card = cards[index];
+
+  document.getElementById("cardModalTitle").textContent = "কার্ড সম্পাদনা করুন";
+  document.getElementById("cardName").value = card.title || "";
+  document.getElementById("cardSubtitle").value = card.subtitle || "";
+  document.getElementById("cardIcon").value = card.icon || "";
+  document.getElementById("cardColor").value = card.color || "blue";
+  document.getElementById("cardUrl").value = card.url || "";
+
+  closeModal("tableModal");
+  openModal("cardModal");
+}
+
+// ======================================
+// ১৫. কার্ড ডিলিট
+// ======================================
+
+function askDelete(index) {
+  deletingIndex = index;
+
+  document.getElementById("deleteCardName").textContent =
+    cards[index].title;
+
+  closeModal("tableModal");
+  openModal("deleteModal");
+}
+
+function confirmDelete() {
+  if (deletingIndex < 0 || !cards[deletingIndex]) return;
+
+  cards.splice(deletingIndex, 1);
+
+  if (selectedIndex >= cards.length) {
+    selectedIndex = Math.max(0, cards.length - 1);
+  }
+
+  saveToStorage();
+  renderCards();
+  renderTable();
+
+  closeModal("deleteModal");
+  openModal("tableModal");
+
+  deletingIndex = -1;
+}
+
+function cancelDelete() {
+  closeModal("deleteModal");
+  openModal("tableModal");
+  deletingIndex = -1;
+}
+
+// ======================================
+// ১৬. Google TV Remote Control
+// ======================================
+
+document.addEventListener("keydown", function(event) {
+  const key = event.key;
+  const modalOpen = document.querySelector(".modal.show");
+
+  if (modalOpen) {
+    if (key === "Escape" || key === "Backspace") {
+      event.preventDefault();
+      modalOpen.classList.remove("show");
+    }
+    return;
+  }
+
+  if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(key)) {
+    event.preventDefault();
+    moveSelection(key);
+  }
+
+  else if (key === "Enter" || key === " " || key === "Select") {
+    event.preventDefault();
+
+    if (cards[selectedIndex]) {
+      openCard(selectedIndex);
+    }
+  }
+
+  else if (
+    key === "Escape" ||
+    key === "Backspace" ||
+    key === "BrowserBack" ||
+    key === "GoBack" ||
+    event.keyCode === 4 ||
+    event.keyCode === 10009
+  ) {
+    event.preventDefault();
+
+    if (history.length > 1) {
+      history.back();
+    }
+  }
+}, true);
+
+// ======================================
+// ১৭. Wi-Fi / Network Status
+// ======================================
+
+const wifi = document.getElementById("wifi");
+
+function updateWifi() {
+  if (navigator.onLine) {
+    wifi.classList.remove("offline");
+    wifi.title = "Connected";
+  } else {
+    wifi.classList.add("offline");
+    wifi.title = "Disconnected";
+  }
+}
+
+window.addEventListener("online", updateWifi);
+window.addEventListener("offline", updateWifi);
+
+updateWifi();
+
+// ======================================
+// ১৮. ঘড়ি
+// ======================================
+
+function updateClock() {
+  const now = new Date();
+
+  const time = now.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true
+  });
+
+  document.getElementById("clock").textContent = time;
+}
+
+updateClock();
+setInterval(updateClock, 1000);
+
+// ======================================
+// ১৯. শুরু
+// ======================================
+
+renderCards();
+
+window.addEventListener("load", function() {
+  document.getElementById("dashboard").focus();
+});
+
+</script>
+
+</body>
+</html>
