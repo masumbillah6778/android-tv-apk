@@ -1,0 +1,408 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A web Multi Player html">
+<meta name="title" content="Multi Player">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+
+<link rel="stylesheet" href="https://masumbillah6778.github.io/fonts/bangla/bangla-custom-font.css">
+<link rel="stylesheet" href="https://masumbillah6778.github.io/css/custom-scrollbar.css">
+
+<link rel="icon" type="image/x-icon" href="https://masumbillah6778.github.io/images/music.png">
+
+<title>Music Lyrics</title>
+
+<link rel="stylesheet" href="https://masumbillah6778.github.io/css/android-tv-apk.css">
+<link rel="stylesheet" href="https://masumbillah6778.github.io/master-multi-media/assets/css/main-page-media-screen-v1.css">
+</head>
+
+<body>
+
+<div class="main-content">
+<main>
+<div class="container">
+<section class="section-content">
+
+<div class="text-heading">
+<p>Music Lyrics</p>
+</div>
+
+<div class="main-slide-box" id="scrollbar">
+<div id="mai-page-fr" class="lyrics-box">
+
+<div class="content-box">
+
+<div id="overlay"></div>
+
+<div class="content">
+<div class="lyrics"></div>
+</div>
+
+<div class="player">
+<table>
+
+<tr>
+<td rowspan="2" class="images">
+<img src="https://masumbillah6778.github.io/images/music-thumbnail-10.jpg" alt="img">
+</td>
+
+<td class="name">
+<a href="https://youtu.be/PCnNcGCxD9o?si=VYvXMqZER5ckxEIZ" target="_blank">
+আমার মন পাখি
+</a>
+</td>
+</tr>
+
+<tr>
+<td class="artist">
+আকাশ মামুদ ও লাইলা
+</td>
+</tr>
+
+<tr>
+<td colspan="2" class="video-player">
+
+<video
+id="mainAudioPlayer"
+controls
+loop
+preload="auto"
+playsinline
+controlslist="nodownload"
+name="media"
+tabindex="0"
+oncontextmenu="return false;">
+
+<source
+src="https://masumbillah6778bd.github.io/music-lyrics/music/amar-mon-pakhi.mp3"
+type="audio/mpeg">
+
+আপনার ব্রাউজার অডিও প্লে সাপোর্ট করে না।
+
+</video>
+
+</td>
+</tr>
+
+</table>
+</div>
+
+</div>
+</div>
+</div>
+
+</section>
+</div>
+</main>
+</div>
+
+<!-- Existing Scripts -->
+
+<script src="https://masumbillah6778.github.io/multi-player/assets/js/hover-auto-play.js"></script>
+<script src="https://masumbillah6778.github.io/js/toggle-dark-light.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<script type="module" src="https://masumbillah6778.github.io/music-lyrics/js/amar-mon-pakhi.js"></script>
+
+<script type="module" src="https://masumbillah6778.github.io/js/android-tv-remote-control-apk.js"></script>
+
+<script type="module" src="https://masumbillah6778.github.io/js/android-tv-remote-back-button.js"></script>
+
+<!-- PLAYER CONTROL -->
+
+<script>
+(function () {
+
+"use strict";
+
+const player = document.getElementById("mainAudioPlayer");
+
+if (!player) return;
+
+player.setAttribute("tabindex", "0");
+
+player.setAttribute("aria-label", "গান চালানো ও নিয়ন্ত্রণ");
+
+
+/* PLAY FUNCTION */
+
+function playVideo() {
+
+if (!player.paused) return;
+
+const result = player.play();
+
+if (result && typeof result.catch === "function") {
+
+result.catch(function(error) {
+
+console.error("Audio Play Error:", error);
+
+});
+
+}
+
+}
+
+
+/* PAUSE FUNCTION */
+
+function pauseVideo() {
+
+if (!player.paused) {
+player.pause();
+}
+
+}
+
+
+/* TOGGLE FUNCTION */
+
+function togglePlayPause() {
+
+if (player.paused || player.ended) {
+playVideo();
+} else {
+pauseVideo();
+}
+
+}
+
+
+/* MOUSE / TOUCH CONTROL */
+
+player.addEventListener("click", function(event) {
+
+if (event.target !== player) return;
+
+try {
+player.focus({preventScroll:true});
+} catch(error) {
+player.focus();
+}
+
+});
+
+
+/* KEYBOARD / TV REMOTE CONTROL */
+
+window.addEventListener("keydown", function(event) {
+
+const key = event.key || "";
+const code = event.code || "";
+const keyCode = event.keyCode || event.which || 0;
+
+
+/* MEDIA PLAY / PAUSE */
+
+const isPlay =
+key === "MediaPlay" ||
+code === "MediaPlay" ||
+keyCode === 126;
+
+const isPause =
+key === "MediaPause" ||
+code === "MediaPause" ||
+keyCode === 127;
+
+const isToggle =
+key === "MediaPlayPause" ||
+code === "MediaPlayPause" ||
+keyCode === 85 ||
+keyCode === 179;
+
+if (isPlay || isPause || isToggle) {
+
+event.preventDefault();
+event.stopPropagation();
+
+if (isPlay) {
+playVideo();
+}
+else if (isPause) {
+pauseVideo();
+}
+else {
+togglePlayPause();
+}
+
+return;
+
+}
+
+
+/* PLAYER FOCUS */
+
+const playerFocused = document.activeElement === player;
+
+if (!playerFocused) return;
+
+
+/* ENTER / OK */
+
+if (
+key === "Enter" ||
+key === " " ||
+key === "Select" ||
+code === "NumpadEnter" ||
+keyCode === 23
+) {
+
+event.preventDefault();
+event.stopPropagation();
+
+togglePlayPause();
+
+return;
+
+}
+
+
+/* LEFT = 10 SECOND BACK */
+
+if (key === "ArrowLeft" || keyCode === 21) {
+
+event.preventDefault();
+
+player.currentTime = Math.max(
+0,
+player.currentTime - 10
+);
+
+return;
+
+}
+
+
+/* RIGHT = 10 SECOND FORWARD */
+
+if (key === "ArrowRight" || keyCode === 22) {
+
+event.preventDefault();
+
+if (Number.isFinite(player.duration)) {
+
+player.currentTime = Math.min(
+player.duration,
+player.currentTime + 10
+);
+
+}
+
+return;
+
+}
+
+
+/* UP = VOLUME UP */
+
+if (key === "ArrowUp" || keyCode === 19) {
+
+event.preventDefault();
+
+player.volume = Math.min(
+1,
+player.volume + 0.1
+);
+
+player.muted = false;
+
+return;
+
+}
+
+
+/* DOWN = VOLUME DOWN */
+
+if (key === "ArrowDown" || keyCode === 20) {
+
+event.preventDefault();
+
+player.volume = Math.max(
+0,
+player.volume - 0.1
+);
+
+return;
+
+}
+
+}, true);
+
+
+/* PAGE LOAD */
+
+window.addEventListener("load", function() {
+
+setTimeout(function() {
+
+try {
+player.focus({preventScroll:true});
+} catch(error) {
+player.focus();
+}
+
+}, 500);
+
+});
+
+
+/* AUDIO ERROR */
+
+player.addEventListener("error", function() {
+
+console.error(
+"Audio file could not load:",
+player.error
+);
+
+});
+
+})();
+</script>
+
+
+<!-- TV REMOTE BACK BUTTON -->
+
+<script>
+
+document.addEventListener("keydown", function(event) {
+
+const backKeys = [
+"Escape",
+"Backspace",
+"BrowserBack",
+"GoBack"
+];
+
+if (
+backKeys.includes(event.key) ||
+event.keyCode === 4 ||
+event.keyCode === 10009
+) {
+
+event.preventDefault();
+
+if (window.history.length > 1) {
+window.history.back();
+}
+else {
+window.location.href = "index.html";
+}
+
+}
+
+});
+
+</script>
+
+</body>
+</html>
