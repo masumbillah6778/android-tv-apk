@@ -1,0 +1,1710 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google TV™</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:"Noto Sans Bengali","Noto Sans",Arial,sans-serif;
+    background:#001039;
+    color:white;
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+.dashboard{
+    min-height:100vh;
+    padding:20px 25px 70px;
+    outline:none;
+    background:
+        radial-gradient(circle at 50% 10%,rgba(0,100,255,.20),transparent 35%),
+        linear-gradient(180deg,#001039 0%,#00091f 100%);
+}
+
+/* HEADER */
+
+header{
+    background-color:red;
+    height:72px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:24px;
+    position:sticky;
+    top:0;
+    z-index:100;
+    box-shadow:0 5px 15px rgba(0,0,0,.25);
+}
+
+.header-left{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    position:relative;
+    z-index:2;
+}
+
+.header-center{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:19px;
+    font-weight:800;
+    color:#fff;
+    white-space:nowrap;
+    text-align:center;
+    pointer-events:none;
+}
+
+.home-icon{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    background:rgba(255,255,255,.10);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:25px;
+    border:1px solid rgba(255,255,255,.15);
+}
+
+.brand{
+    font-size:25px;
+    font-weight:800;
+}
+
+.subtitle{
+    color:#b8c6e8;
+    font-size:13px;
+    margin-top:3px;
+}
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    position:relative;
+    z-index:2;
+}
+
+.wifi-box{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:13px;
+}
+
+#wifiIcon{
+    width:24px;
+    height:24px;
+}
+
+.clock{
+    font-size:16px;
+    font-weight:600;
+    min-width:75px;
+    text-align:right;
+}
+
+.settings-btn{
+    border:0;
+    background:rgba(255,255,255,.10);
+    color:white;
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    font-size:21px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.settings-btn:hover,
+.settings-btn:focus{
+    background:rgba(255,255,255,.22);
+    outline:2px solid #ffd900;
+}
+
+/* CARD GRID */
+
+.card-grid{
+    width:100%;
+    max-width:1250px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+.card{
+    position:relative;
+    min-height:170px;
+    border-radius:22px;
+    padding:24px 20px;
+    text-decoration:none;
+    color:white;
+    overflow:hidden;
+    border:3px solid transparent;
+    box-shadow:
+        0 12px 35px rgba(0,0,0,.35),
+        inset 0 1px 0 rgba(255,255,255,.12);
+    transition:
+        transform .18s ease,
+        border-color .18s ease,
+        box-shadow .18s ease;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+}
+
+.card.selected{
+    border-color:#ffe600;
+    box-shadow:
+        0 0 0 2px rgba(255,230,0,.25),
+        0 0 30px rgba(255,230,0,.45),
+        0 14px 40px rgba(0,0,0,.45);
+    transform:scale(1.025);
+}
+
+.card-icon{
+    width:64px;
+    height:64px;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:39px;
+    margin-bottom:12px;
+    background:rgba(255,255,255,.15);
+    overflow:hidden;
+}
+
+.card-icon img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.card-title{
+    font-size:21px;
+    font-weight:800;
+    margin-bottom:5px;
+}
+
+.card-subtitle{
+    font-size:12px;
+    color:rgba(255,255,255,.80);
+}
+
+/* PASSWORD LOCK */
+
+.card-lock{
+    position:absolute;
+    top:12px;
+    right:12px;
+    width:34px;
+    height:34px;
+    border:0;
+    border-radius:50%;
+    background:rgba(0,0,0,.28);
+    color:white;
+    font-size:17px;
+    cursor:pointer;
+    z-index:5;
+}
+
+.card-lock:hover{
+    background:rgba(0,0,0,.55);
+}
+
+/* COLORS */
+
+.blue{
+    background:linear-gradient(135deg,#0879e8,#0047a7);
+}
+
+.green{
+    background:linear-gradient(135deg,#0aaa73,#00623f);
+}
+
+.purple{
+    background:linear-gradient(135deg,#8b4cff,#4b168e);
+}
+
+.orange{
+    background:linear-gradient(135deg,#ff9a1f,#d84b00);
+}
+
+.cyan{
+    background:linear-gradient(135deg,#00bcd4,#006c92);
+}
+
+.pink{
+    background:linear-gradient(135deg,#f05ba7,#8b1e65);
+}
+
+.teal{
+    background:linear-gradient(135deg,#00a99d,#00665f);
+}
+
+.royal{
+    background:linear-gradient(135deg,#4c65e8,#26358c);
+}
+
+/* WAVE */
+
+.wave{
+    position:fixed;
+    left:0;
+    bottom:-1px;
+    width:100%;
+    height:50px;
+    background:
+        radial-gradient(80px 35px at 20% 100%,transparent 98%,#001039 100%),
+        radial-gradient(80px 35px at 40% 100%,transparent 98%,#001039 100%),
+        radial-gradient(80px 35px at 60% 100%,transparent 98%,#001039 100%),
+        radial-gradient(80px 35px at 80% 100%,transparent 98%,#001039 100%);
+    opacity:.7;
+    pointer-events:none;
+}
+
+/* MODAL */
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.72);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:1000;
+}
+
+.modal-overlay.show{
+    display:flex;
+}
+
+.modal{
+    width:min(620px,100%);
+    max-height:90vh;
+    overflow:auto;
+    background:#08173f;
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:20px;
+    box-shadow:0 25px 80px rgba(0,0,0,.65);
+    padding:24px;
+}
+
+.modal.large{
+    width:min(1050px,100%);
+}
+
+.modal h2{
+    text-align:center;
+    font-size:22px;
+    margin-bottom:20px;
+}
+
+.modal-close{
+    float:right;
+    border:0;
+    background:rgba(255,255,255,.10);
+    color:white;
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    font-size:20px;
+    cursor:pointer;
+}
+
+/* SETTINGS */
+
+.settings-list{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.settings-option{
+    width:100%;
+    padding:16px;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:14px;
+    background:rgba(255,255,255,.08);
+    color:white;
+    font-size:17px;
+    text-align:left;
+    cursor:pointer;
+}
+
+.settings-option:hover,
+.settings-option:focus{
+    background:rgba(255,255,255,.15);
+    outline:2px solid #ffd900;
+}
+
+/* PASSWORD LOGIN */
+
+.password-box{
+    text-align:center;
+    padding:10px 0;
+}
+
+.lock-big{
+    font-size:48px;
+    margin-bottom:10px;
+}
+
+.password-box p{
+    color:#c8d4f5;
+    margin-bottom:16px;
+}
+
+.password-wrap{
+    position:relative;
+}
+
+.password-wrap input{
+    width:100%;
+    height:46px;
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:10px;
+    background:#020b27;
+    color:white;
+    padding:0 50px 0 13px;
+    font-size:15px;
+    outline:none;
+}
+
+.password-wrap input:focus{
+    border-color:#ffd900;
+    box-shadow:0 0 0 2px rgba(255,217,0,.15);
+}
+
+.password-toggle{
+    position:absolute;
+    right:6px;
+    top:5px;
+    width:36px;
+    height:36px;
+    border:0;
+    border-radius:8px;
+    background:rgba(255,255,255,.10);
+    color:white;
+    cursor:pointer;
+}
+
+.form-buttons{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+.btn{
+    flex:1;
+    min-height:44px;
+    border:0;
+    border-radius:10px;
+    color:white;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.btn-save{
+    background:linear-gradient(135deg,#0879e8,#0054c9);
+}
+
+.btn-cancel{
+    background:rgba(255,255,255,.12);
+}
+
+.btn:hover,
+.btn:focus{
+    filter:brightness(1.12);
+    outline:2px solid #ffd900;
+}
+
+.error-message{
+    color:#ff3d3d;
+    font-weight:800;
+    font-size:15px;
+    min-height:25px;
+    margin-top:9px;
+}
+
+/* TABLE */
+
+.table-wrap{
+    width:100%;
+    overflow:auto;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,.12);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:650px;
+}
+
+th,
+td{
+    border-bottom:1px solid rgba(255,255,255,.10);
+    padding:12px 10px;
+    text-align:left;
+    vertical-align:middle;
+}
+
+th{
+    background:#102454;
+    color:#fff;
+    font-weight:800;
+    white-space:nowrap;
+}
+
+td{
+    color:#dce6ff;
+    background:rgba(255,255,255,.025);
+}
+
+tr:hover td{
+    background:rgba(255,255,255,.06);
+}
+
+.table-actions{
+    display:flex;
+    gap:7px;
+    align-items:center;
+    white-space:nowrap;
+}
+
+.table-action{
+    border:0;
+    width:35px;
+    height:35px;
+    border-radius:8px;
+    background:rgba(255,255,255,.10);
+    color:white;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.table-action:hover,
+.table-action:focus{
+    background:rgba(255,255,255,.20);
+    outline:2px solid #ffd900;
+}
+
+.password-value{
+    font-family:monospace;
+    font-weight:700;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+    .card-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .brand{
+        font-size:20px;
+    }
+
+    .subtitle{
+        font-size:11px;
+    }
+}
+
+@media(max-width:600px){
+
+    .dashboard{
+        padding:14px 12px 60px;
+    }
+
+    header{
+        height:60px;
+        margin-bottom:17px;
+    }
+
+    .home-icon{
+        width:43px;
+        height:43px;
+        font-size:21px;
+    }
+
+    .header-left{
+        gap:9px;
+    }
+
+    .brand{
+        font-size:18px;
+    }
+
+    .header-center{
+        font-size:14px;
+    }
+
+    .header-right{
+        gap:8px;
+    }
+
+    .wifi-box{
+        display:none;
+    }
+
+    .clock{
+        font-size:13px;
+        min-width:62px;
+    }
+
+    .settings-btn{
+        width:40px;
+        height:40px;
+    }
+
+    .card-grid{
+        gap:12px;
+    }
+
+    .card{
+        min-height:145px;
+        border-radius:18px;
+        padding:15px 10px;
+    }
+
+    .card-icon{
+        width:50px;
+        height:50px;
+        font-size:30px;
+        border-radius:14px;
+    }
+
+    .card-title{
+        font-size:17px;
+    }
+
+    .card-subtitle{
+        font-size:10px;
+    }
+
+    .card-lock{
+        width:30px;
+        height:30px;
+        font-size:15px;
+        top:8px;
+        right:8px;
+    }
+
+    .modal{
+        padding:18px;
+        border-radius:17px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="dashboard" id="dashboard" tabindex="0">
+
+<header>
+
+    <div class="header-left">
+        <div class="home-icon">⌂</div>
+
+        <div>
+            <div class="brand">Google TV™</div>
+            <div class="subtitle">স্মার্ট তথ্য ব্যবস্থাপনা অ্যাপ</div>
+        </div>
+    </div>
+
+    <div class="header-center">হোম</div>
+
+    <div class="header-right">
+
+        <div class="wifi-box">
+
+            <svg id="wifiIcon" viewBox="0 0 24 24">
+                <path
+                    id="wifiPath"
+                    d="M2 8.5C7.5 3.8 16.5 3.8 22 8.5M5 12c3.9-3.3 10.1-3.3 14 0M8.5 15.5c2-1.7 5-1.7 7 0M12 19h.01"
+                    fill="none"
+                    stroke="#45e68a"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                />
+            </svg>
+
+            <span id="wifiText">অনলাইন</span>
+        </div>
+
+        <div class="clock" id="clock"></div>
+
+        <button
+            class="settings-btn"
+            id="settingsBtn"
+            type="button"
+            title="সেটিংস"
+        >⚙</button>
+
+    </div>
+
+</header>
+
+<main class="card-grid" id="cardGrid"></main>
+
+</div>
+
+<div class="wave"></div>
+
+
+<!-- SETTINGS MODAL -->
+
+<div class="modal-overlay" id="settingsModal">
+
+    <div class="modal">
+
+        <button
+            class="modal-close"
+            onclick="closeModal('settingsModal')"
+        >×</button>
+
+        <h2>⚙ সেটিংস</h2>
+
+        <div class="settings-list">
+
+            <button
+                class="settings-option"
+                onclick="openDetailsFromSettings()"
+            >
+                📋 সকল কার্ডের বিস্তারিত দেখুন
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- PASSWORD MODAL -->
+
+<div class="modal-overlay" id="passwordModal">
+
+    <div class="modal">
+
+        <button
+            class="modal-close"
+            onclick="closeModal('passwordModal')"
+        >×</button>
+
+        <div class="password-box">
+
+            <div class="lock-big">🔒</div>
+
+            <h2 id="passwordCardName">পাসওয়ার্ড প্রয়োজন</h2>
+
+            <p>এই কার্ডে প্রবেশ করতে পাসওয়ার্ড দিন</p>
+
+            <div class="password-wrap">
+
+                <input
+                    id="enterPassword"
+                    type="password"
+                    placeholder="পাসওয়ার্ড লিখুন"
+                    onkeydown="if(event.key==='Enter')checkPassword();"
+                >
+
+                <button
+                    type="button"
+                    class="password-toggle"
+                    onclick="togglePassword('enterPassword',this)"
+                >👁️</button>
+
+            </div>
+
+            <div class="error-message" id="passwordError"></div>
+
+            <div class="form-buttons">
+
+                <button
+                    class="btn btn-cancel"
+                    onclick="closeModal('passwordModal')"
+                >
+                    বাতিল
+                </button>
+
+                <button
+                    class="btn btn-save"
+                    onclick="checkPassword()"
+                >
+                    🔓 প্রবেশ করুন
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- DETAILS MODAL: READ ONLY -->
+
+<div class="modal-overlay" id="detailsModal">
+
+    <div class="modal large">
+
+        <button
+            class="modal-close"
+            onclick="closeModal('detailsModal')"
+        >×</button>
+
+        <h2>📋 সকল কার্ডের বিস্তারিত</h2>
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>নং</th>
+                        <th>কার্ডের নাম</th>
+                        <th>সাবটাইটেল</th>
+                        <th>পাসওয়ার্ড</th>
+                        <th>URL</th>
+                    </tr>
+                </thead>
+
+                <tbody id="detailsTableBody"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   CARD CONFIGURATION
+
+   HTML থেকে কার্ড যুক্ত / পরিবর্তন / ডিলেট করবেন।
+   Settings শুধু এই তালিকা দেখাবে।
+   ========================================================= */
+
+const defaultCards = [
+
+    {
+        title:"মিউজিক লিরিক",
+        subtitle:"গানের কথা",
+        icon:"𝄞",
+        color:"blue",
+        url:"https://masumbillah6778.github.io/android-tv-apk/card/music-lyric.html",
+        password:""
+    },
+
+    {
+        title:"আমার মন পাখি",
+        subtitle:"(ভিডিও লিংক)",
+        icon:"🔗",
+        color:"orange",
+        url:"https://masumbillah6778.github.io/android-tv-apk/amar-mon-pakhi.html",
+        password:""
+    },
+
+    {
+        title:"ব্যাক",
+        subtitle:"(ডাউনলোড/আপলোড)",
+        icon:"☁️",
+        color:"teal",
+        url:"#",
+        password:"1234"
+    }
+
+];
+
+
+/* =========================================================
+   SOURCE OF TRUTH
+
+   LocalStorage ব্যবহার করা হচ্ছে না।
+   প্রতিবার HTML লোড হলে defaultCards থেকেই
+   সব কার্ড তৈরি হবে।
+
+   ফলে HTML-এ পরিবর্তন করলেই নতুন তালিকা আসবে।
+   ========================================================= */
+
+let cards = defaultCards.map(card => ({
+    ...card
+}));
+
+
+/* ELEMENTS */
+
+const cardGrid =
+    document.getElementById("cardGrid");
+
+const dashboard =
+    document.getElementById("dashboard");
+
+let selectedIndex = 0;
+let pendingCardIndex = -1;
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+function isImageUrl(value){
+
+    return /^https?:\/\/.+/i.test(
+        String(value || "").trim()
+    );
+
+}
+
+
+function createIcon(value){
+
+    const box =
+        document.createElement("div");
+
+    box.className = "card-icon";
+
+    if(isImageUrl(value)){
+
+        const img =
+            document.createElement("img");
+
+        img.src = value;
+        img.alt = "";
+
+        img.onerror = function(){
+
+            this.style.display = "none";
+            box.textContent = "📺";
+
+        };
+
+        box.appendChild(img);
+
+    }else{
+
+        box.textContent = value || "📺";
+
+    }
+
+    return box;
+
+}
+
+
+/* =========================================================
+   RENDER CARDS
+========================================================= */
+
+function renderCards(){
+
+    cardGrid.innerHTML = "";
+
+    cards.forEach((card,index)=>{
+
+        const a =
+            document.createElement("a");
+
+        a.href = "#";
+
+        a.className =
+            "card " + (card.color || "blue");
+
+        a.dataset.index = index;
+
+        a.addEventListener("click",function(event){
+
+            event.preventDefault();
+
+            selectedIndex = index;
+
+            updateSelection();
+
+            openCard(index);
+
+        });
+
+
+        a.appendChild(createIcon(card.icon));
+
+
+        const title =
+            document.createElement("div");
+
+        title.className = "card-title";
+
+        title.textContent =
+            card.title || "নতুন কার্ড";
+
+        a.appendChild(title);
+
+
+        const subtitle =
+            document.createElement("div");
+
+        subtitle.className = "card-subtitle";
+
+        subtitle.textContent =
+            card.subtitle || "";
+
+        a.appendChild(subtitle);
+
+
+        if(String(card.password || "").trim() !== ""){
+
+            const lock =
+                document.createElement("button");
+
+            lock.type = "button";
+            lock.className = "card-lock";
+            lock.textContent = "🔒";
+            lock.title = "পাসওয়ার্ডযুক্ত কার্ড";
+
+            lock.addEventListener("click",function(event){
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                selectedIndex = index;
+
+                updateSelection();
+
+                openPasswordModal(index);
+
+            });
+
+            a.appendChild(lock);
+
+        }
+
+        cardGrid.appendChild(a);
+
+    });
+
+    updateSelection();
+
+}
+
+
+/* =========================================================
+   SELECTION
+========================================================= */
+
+function updateSelection(){
+
+    const all =
+        document.querySelectorAll(".card");
+
+    all.forEach((card,index)=>{
+
+        card.classList.toggle(
+            "selected",
+            index === selectedIndex
+        );
+
+    });
+
+}
+
+
+/* =========================================================
+   OPEN CARD
+========================================================= */
+
+function openCard(index){
+
+    if(!cards[index])
+        return;
+
+    const card = cards[index];
+
+    if(String(card.password || "").trim() === ""){
+
+        navigateToCard(index);
+
+    }else{
+
+        openPasswordModal(index);
+
+    }
+
+}
+
+
+function navigateToCard(index){
+
+    const card = cards[index];
+
+    if(card && card.url){
+
+        if(card.url === "#")
+            return;
+
+        window.location.href = card.url;
+
+    }
+
+}
+
+
+/* =========================================================
+   PASSWORD MODAL
+========================================================= */
+
+function openPasswordModal(index){
+
+    pendingCardIndex = index;
+
+    document.getElementById(
+        "passwordCardName"
+    ).textContent =
+        cards[index].title || "কার্ড";
+
+    document.getElementById(
+        "enterPassword"
+    ).value = "";
+
+    document.getElementById(
+        "passwordError"
+    ).textContent = "";
+
+    showModal("passwordModal");
+
+    setTimeout(()=>{
+
+        document.getElementById(
+            "enterPassword"
+        ).focus();
+
+    },100);
+
+}
+
+
+function checkPassword(){
+
+    if(pendingCardIndex < 0)
+        return;
+
+    const card = cards[pendingCardIndex];
+
+    if(!card)
+        return;
+
+    const entered =
+        document.getElementById("enterPassword").value;
+
+    if(entered === card.password){
+
+        document.getElementById(
+            "passwordError"
+        ).textContent = "";
+
+        const index = pendingCardIndex;
+
+        closeModal("passwordModal");
+
+        pendingCardIndex = -1;
+
+        navigateToCard(index);
+
+    }else{
+
+        const error =
+            document.getElementById("passwordError");
+
+        error.textContent =
+            "আপনি ভুল পাসওয়ার্ড দিয়েছেন";
+
+        error.style.color = "#ff3d3d";
+
+        try{
+
+            if("speechSynthesis" in window){
+
+                window.speechSynthesis.cancel();
+
+                const speech =
+                    new SpeechSynthesisUtterance(
+                        "আপনি ভুল পাসওয়ার্ড দিয়েছেন"
+                    );
+
+                speech.lang = "bn-BD";
+                speech.rate = 0.9;
+
+                window.speechSynthesis.speak(speech);
+
+            }
+
+        }catch(e){}
+
+        document.getElementById(
+            "enterPassword"
+        ).focus();
+
+    }
+
+}
+
+
+/* =========================================================
+   DETAILS: READ ONLY
+========================================================= */
+
+function openDetailsFromSettings(){
+
+    closeModal("settingsModal");
+
+    renderDetailsTable();
+
+    showModal("detailsModal");
+
+}
+
+
+function renderDetailsTable(){
+
+    const tbody =
+        document.getElementById("detailsTableBody");
+
+    tbody.innerHTML = "";
+
+    cards.forEach((card,index)=>{
+
+        const tr =
+            document.createElement("tr");
+
+
+        const noTd =
+            document.createElement("td");
+
+        noTd.textContent = index + 1;
+
+        tr.appendChild(noTd);
+
+
+        const nameTd =
+            document.createElement("td");
+
+        nameTd.textContent = card.title || "";
+
+        tr.appendChild(nameTd);
+
+
+        const subTd =
+            document.createElement("td");
+
+        subTd.textContent = card.subtitle || "";
+
+        tr.appendChild(subTd);
+
+
+        const passwordTd =
+            document.createElement("td");
+
+        const passwordValue =
+            document.createElement("span");
+
+        passwordValue.className = "password-value";
+
+
+        if(String(card.password || "").trim() !== ""){
+
+            passwordValue.textContent = "••••••";
+
+        }else{
+
+            passwordValue.textContent = "পাসওয়ার্ড নেই";
+
+            passwordValue.style.color = "#9aa9ca";
+
+        }
+
+        passwordTd.appendChild(passwordValue);
+
+        tr.appendChild(passwordTd);
+
+
+        const urlTd =
+            document.createElement("td");
+
+        if(card.url){
+
+            const urlText =
+                document.createElement("span");
+
+            urlText.textContent = card.url;
+
+            urlText.style.maxWidth = "350px";
+            urlText.style.display = "inline-block";
+            urlText.style.overflow = "hidden";
+            urlText.style.textOverflow = "ellipsis";
+            urlText.style.whiteSpace = "nowrap";
+
+            urlTd.appendChild(urlText);
+
+        }else{
+
+            urlTd.textContent = "—";
+
+        }
+
+        tr.appendChild(urlTd);
+
+        tbody.appendChild(tr);
+
+    });
+
+}
+
+
+/* =========================================================
+   PASSWORD EYE
+========================================================= */
+
+function togglePassword(inputId,button){
+
+    const input =
+        document.getElementById(inputId);
+
+    if(input.type === "password"){
+
+        input.type = "text";
+        button.textContent = "🙈";
+
+    }else{
+
+        input.type = "password";
+        button.textContent = "👁️";
+
+    }
+
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+function showModal(id){
+
+    document
+        .getElementById(id)
+        .classList.add("show");
+
+}
+
+
+function closeModal(id){
+
+    document
+        .getElementById(id)
+        .classList.remove("show");
+
+}
+
+
+/* SETTINGS BUTTON */
+
+document
+    .getElementById("settingsBtn")
+    .addEventListener("click",function(){
+
+        showModal("settingsModal");
+
+    });
+
+
+/* OUTSIDE CLICK */
+
+document
+    .querySelectorAll(".modal-overlay")
+    .forEach(overlay=>{
+
+        overlay.addEventListener("click",function(event){
+
+            if(event.target === overlay){
+
+                overlay.classList.remove("show");
+
+            }
+
+        });
+
+    });
+
+
+/* =========================================================
+   TV REMOTE NAVIGATION
+========================================================= */
+
+function getCardCenter(el){
+
+    const r = el.getBoundingClientRect();
+
+    return {
+
+        x: r.left + r.width / 2,
+
+        y: r.top + r.height / 2
+
+    };
+
+}
+
+
+function findNextCard(direction){
+
+    const elements =
+        [...document.querySelectorAll(".card")];
+
+    if(elements.length === 0)
+        return -1;
+
+    const current = elements[selectedIndex];
+
+    if(!current)
+        return -1;
+
+    const c = getCardCenter(current);
+
+    let bestIndex = -1;
+    let bestScore = Infinity;
+
+
+    elements.forEach((el,index)=>{
+
+        if(index === selectedIndex)
+            return;
+
+        const p = getCardCenter(el);
+
+        const dx = p.x - c.x;
+        const dy = p.y - c.y;
+
+        let primary;
+        let secondary;
+
+
+        if(direction === "right"){
+
+            if(dx <= 5)
+                return;
+
+            primary = dx;
+            secondary = Math.abs(dy);
+
+        }
+
+        else if(direction === "left"){
+
+            if(dx >= -5)
+                return;
+
+            primary = -dx;
+            secondary = Math.abs(dy);
+
+        }
+
+        else if(direction === "down"){
+
+            if(dy <= 5)
+                return;
+
+            primary = dy;
+            secondary = Math.abs(dx);
+
+        }
+
+        else if(direction === "up"){
+
+            if(dy >= -5)
+                return;
+
+            primary = -dy;
+            secondary = Math.abs(dx);
+
+        }
+
+
+        const score =
+            primary * 10 + secondary;
+
+        if(score < bestScore){
+
+            bestScore = score;
+            bestIndex = index;
+
+        }
+
+    });
+
+    return bestIndex;
+
+}
+
+
+function moveSelection(direction){
+
+    const next = findNextCard(direction);
+
+    if(next !== -1){
+
+        selectedIndex = next;
+
+        updateSelection();
+
+        const card =
+            document.querySelectorAll(".card")[next];
+
+        if(card){
+
+            card.scrollIntoView({
+
+                behavior:"smooth",
+
+                block:"nearest",
+
+                inline:"nearest"
+
+            });
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   TV REMOTE KEYBOARD
+========================================================= */
+
+document.addEventListener("keydown",function(event){
+
+    const key = event.key;
+    const code = event.keyCode;
+
+    const modalOpen =
+        document.querySelector(".modal-overlay.show");
+
+
+    if(modalOpen){
+
+        if(
+            key === "Escape" ||
+            key === "Backspace" ||
+            key === "BrowserBack" ||
+            key === "GoBack" ||
+            code === 4 ||
+            code === 10009
+        ){
+
+            event.preventDefault();
+
+            modalOpen.classList.remove("show");
+
+        }
+
+        return;
+
+    }
+
+
+    if(key === "ArrowRight"){
+
+        event.preventDefault();
+
+        moveSelection("right");
+
+        return;
+
+    }
+
+
+    if(key === "ArrowLeft"){
+
+        event.preventDefault();
+
+        moveSelection("left");
+
+        return;
+
+    }
+
+
+    if(key === "ArrowDown"){
+
+        event.preventDefault();
+
+        moveSelection("down");
+
+        return;
+
+    }
+
+
+    if(key === "ArrowUp"){
+
+        event.preventDefault();
+
+        moveSelection("up");
+
+        return;
+
+    }
+
+
+    if(
+        key === "Enter" ||
+        key === " " ||
+        code === 13 ||
+        code === 23
+    ){
+
+        event.preventDefault();
+
+        openCard(selectedIndex);
+
+        return;
+
+    }
+
+
+    if(
+        key === "Escape" ||
+        key === "Backspace" ||
+        key === "BrowserBack" ||
+        key === "GoBack" ||
+        code === 4 ||
+        code === 10009
+    ){
+
+        event.preventDefault();
+
+        if(window.history.length > 1){
+
+            window.history.back();
+
+        }
+
+    }
+
+});
+
+
+/* =========================================================
+   WIFI
+========================================================= */
+
+function updateWifiStatus(){
+
+    const icon =
+        document.getElementById("wifiPath");
+
+    const text =
+        document.getElementById("wifiText");
+
+
+    if(navigator.onLine){
+
+        icon.setAttribute("stroke","#45e68a");
+
+        text.textContent = "অনলাইন";
+
+        text.style.color = "#45e68a";
+
+    }else{
+
+        icon.setAttribute("stroke","#ff3d3d");
+
+        text.textContent = "অফলাইন";
+
+        text.style.color = "#ff3d3d";
+
+    }
+
+}
+
+
+window.addEventListener("online",updateWifiStatus);
+
+window.addEventListener("offline",updateWifiStatus);
+
+
+/* =========================================================
+   CLOCK
+========================================================= */
+
+function updateClock(){
+
+    const now = new Date();
+
+    const time =
+        now.toLocaleTimeString("en-US",{
+
+            hour:"numeric",
+
+            minute:"2-digit",
+
+            hour12:true
+
+        });
+
+    document.getElementById("clock").textContent = time;
+
+}
+
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
+renderCards();
+
+updateWifiStatus();
+
+updateClock();
+
+setInterval(updateClock,1000);
+
+setTimeout(()=>{
+
+    dashboard.focus();
+
+},200);
+
+</script>
+
+</body>
+</html>
