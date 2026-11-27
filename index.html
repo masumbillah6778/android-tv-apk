@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -32,22 +33,36 @@ body{
 /* ================= HEADER ================= */
 
 header{
-    background-color: red;
-    width: 100%;
+    background-color:red;
     height:72px;
     display:flex;
     align-items:center;
     justify-content:space-between;
     margin-bottom:24px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    position:sticky;
+    top:0;
+    z-index:100;
+    box-shadow:0 5px 15px rgba(0,0,0,.25);
 }
 
 .header-left{
     display:flex;
     align-items:center;
     gap:14px;
+    position:relative;
+    z-index:2;
+}
+
+.header-center{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:19px;
+    font-weight:800;
+    color:#fff;
+    white-space:nowrap;
+    text-align:center;
+    pointer-events:none;
 }
 
 .home-icon{
@@ -77,6 +92,8 @@ header{
     display:flex;
     align-items:center;
     gap:18px;
+    position:relative;
+    z-index:2;
 }
 
 .wifi-box{
@@ -122,7 +139,6 @@ header{
     width:100%;
     max-width:1250px;
     margin:auto;
-    padding-top: 100px;
     display:grid;
     grid-template-columns:repeat(4,1fr);
     gap:20px;
@@ -194,7 +210,7 @@ header{
     color:rgba(255,255,255,.80);
 }
 
-/* শুধু password থাকলে lock দেখা যাবে */
+/* PASSWORD LOCK */
 
 .card-lock{
     position:absolute;
@@ -580,6 +596,10 @@ tr:hover td{
         font-size:18px;
     }
 
+    .header-center{
+        font-size:14px;
+    }
+
     .header-right{
         gap:8px;
     }
@@ -654,6 +674,11 @@ tr:hover td{
             <div class="subtitle">স্মার্ট তথ্য ব্যবস্থাপনা অ্যাপ</div>
         </div>
 
+    </div>
+
+    <!-- HEADER CENTER PAGE NAME -->
+    <div class="header-center">
+        হোম
     </div>
 
     <div class="header-right">
@@ -746,10 +771,7 @@ tr:hover td{
 
         <h2 id="formTitle">➕ নতুন কার্ড</h2>
 
-        <input
-            type="hidden"
-            id="editIndex"
-        >
+        <input type="hidden" id="editIndex">
 
         <div class="form-group">
 
@@ -1035,11 +1057,11 @@ tr:hover td{
 const defaultCards = [
 
     {
-        title:"মিউজিক লিরিক",
-        subtitle:"গানের কথা",
-        icon:"𝄞",
+        title:"Gmail",
+        subtitle:"(জিমেইল ডাটা)",
+        icon:"✉️",
         color:"blue",
-        url:"https://masumbillah6778.github.io/android-tv-apk/card/music-lyric.html",
+        url:"https://masumbillah6778.github.io/android-tv-apk/amar-mon.html",
         password:""
     },
 
@@ -1096,7 +1118,7 @@ const defaultCards = [
         url:"https://masumbillah6778.github.io/android-tv-apk/tv-v5.html",
         password:""
     },
-    
+
     {
         title:"ব্যাক",
         subtitle:"(ডাউনলোড/আপলোড)",
@@ -1120,17 +1142,26 @@ const defaultCards = [
 
 /* =========================================================
    LOCAL STORAGE
+   EACH HTML COPY GETS ITS OWN STORAGE KEY
 ========================================================= */
 
+// একই ব্রাউজারে আলাদা HTML ফাইলের জন্য আলাদা Key
 const STORAGE_KEY =
+    "google_tv_dashboard_cards_v1_" +
+    encodeURIComponent(location.pathname);
+
+// পুরোনো সংস্করণের Storage Key
+const LEGACY_STORAGE_KEY =
     "google_tv_dashboard_cards_v1";
 
 let cards = loadCards();
+
 
 function loadCards(){
 
     try{
 
+        // প্রথমে এই HTML কপির নিজস্ব ডাটা দেখবে
         const saved =
             localStorage.getItem(STORAGE_KEY);
 
@@ -1154,6 +1185,41 @@ function loadCards(){
 
         }
 
+        // নিজস্ব ডাটা না থাকলে পুরোনো ডাটা কপি করবে
+        const oldSaved =
+            localStorage.getItem(
+                LEGACY_STORAGE_KEY
+            );
+
+        if(oldSaved){
+
+            const parsed =
+                JSON.parse(oldSaved);
+
+            if(Array.isArray(parsed)){
+
+                const migrated =
+                    parsed.map(card => ({
+
+                        ...card,
+
+                        password:
+                            card.password || ""
+
+                    }));
+
+                // পুরোনো ডাটা মুছে না দিয়ে নতুন Key-তে কপি
+                localStorage.setItem(
+                    STORAGE_KEY,
+                    JSON.stringify(migrated)
+                );
+
+                return migrated;
+
+            }
+
+        }
+
     }catch(error){
 
         console.log(
@@ -1163,6 +1229,7 @@ function loadCards(){
 
     }
 
+    // একেবারে নতুন কপি হলে Default Cards
     return defaultCards.map(card => ({
         ...card
     }));
@@ -1324,9 +1391,7 @@ function renderCards(){
         a.appendChild(subtitle);
 
 
-        /*
-         * পাসওয়ার্ড থাকলেই শুধু 🔒 দেখাবে
-         */
+        // পাসওয়ার্ড থাকলেই শুধু Lock দেখাবে
         if(
             String(card.password || "").trim() !== ""
         ){
@@ -1812,67 +1877,45 @@ function renderDetailsTable(){
     cards.forEach((card,index)=>{
 
         const tr =
-            document.createElement(
-                "tr"
-            );
+            document.createElement("tr");
 
 
-        /* নং */
-
+        // নং
         const noTd =
-            document.createElement(
-                "td"
-            );
+            document.createElement("td");
 
         noTd.textContent =
             index + 1;
 
-        tr.appendChild(
-            noTd
-        );
+        tr.appendChild(noTd);
 
 
-        /* নাম */
-
+        // নাম
         const nameTd =
-            document.createElement(
-                "td"
-            );
+            document.createElement("td");
 
         nameTd.textContent =
             card.title || "";
 
-        tr.appendChild(
-            nameTd
-        );
+        tr.appendChild(nameTd);
 
 
-        /* সাবটাইটেল */
-
+        // সাবটাইটেল
         const subTd =
-            document.createElement(
-                "td"
-            );
+            document.createElement("td");
 
         subTd.textContent =
             card.subtitle || "";
 
-        tr.appendChild(
-            subTd
-        );
+        tr.appendChild(subTd);
 
 
-        /* PASSWORD */
-
+        // PASSWORD
         const passwordTd =
-            document.createElement(
-                "td"
-            );
+            document.createElement("td");
 
         const passwordValue =
-            document.createElement(
-                "span"
-            );
+            document.createElement("span");
 
         passwordValue.className =
             "password-value";
@@ -1899,24 +1942,17 @@ function renderDetailsTable(){
             passwordValue
         );
 
-        tr.appendChild(
-            passwordTd
-        );
+        tr.appendChild(passwordTd);
 
 
-        /* URL */
-
+        // URL
         const urlTd =
-            document.createElement(
-                "td"
-            );
+            document.createElement("td");
 
         if(card.url){
 
             const urlText =
-                document.createElement(
-                    "span"
-                );
+                document.createElement("span");
 
             urlText.textContent =
                 card.url;
@@ -1936,9 +1972,7 @@ function renderDetailsTable(){
             urlText.style.whiteSpace =
                 "nowrap";
 
-            urlTd.appendChild(
-                urlText
-            );
+            urlTd.appendChild(urlText);
 
         }else{
 
@@ -1947,40 +1981,27 @@ function renderDetailsTable(){
 
         }
 
-        tr.appendChild(
-            urlTd
-        );
+        tr.appendChild(urlTd);
 
 
-        /* =========================
-           ACTION
-           👁️ + ✏️ + 🗑️
-        ========================= */
-
+        // ACTION
         const actionTd =
-            document.createElement(
-                "td"
-            );
+            document.createElement("td");
 
         const actions =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
         actions.className =
             "table-actions";
 
 
-        /* EYE */
-
+        // EYE
         if(
             String(card.password || "").trim() !== ""
         ){
 
             const eyeBtn =
-                document.createElement(
-                    "button"
-                );
+                document.createElement("button");
 
             eyeBtn.type =
                 "button";
@@ -2034,19 +2055,14 @@ function renderDetailsTable(){
                 };
 
 
-            actions.appendChild(
-                eyeBtn
-            );
+            actions.appendChild(eyeBtn);
 
         }
 
 
-        /* EDIT */
-
+        // EDIT
         const editBtn =
-            document.createElement(
-                "button"
-            );
+            document.createElement("button");
 
         editBtn.type =
             "button";
@@ -2072,17 +2088,12 @@ function renderDetailsTable(){
             };
 
 
-        actions.appendChild(
-            editBtn
-        );
+        actions.appendChild(editBtn);
 
 
-        /* DELETE */
-
+        // DELETE
         const deleteBtn =
-            document.createElement(
-                "button"
-            );
+            document.createElement("button");
 
         deleteBtn.type =
             "button";
@@ -2099,30 +2110,19 @@ function renderDetailsTable(){
         deleteBtn.onclick =
             function(){
 
-                openDeleteModal(
-                    index
-                );
+                openDeleteModal(index);
 
             };
 
 
-        actions.appendChild(
-            deleteBtn
-        );
+        actions.appendChild(deleteBtn);
 
 
-        actionTd.appendChild(
-            actions
-        );
+        actionTd.appendChild(actions);
 
-        tr.appendChild(
-            actionTd
-        );
+        tr.appendChild(actionTd);
 
-
-        tbody.appendChild(
-            tr
-        );
+        tbody.appendChild(tr);
 
     });
 
@@ -2182,15 +2182,7 @@ function confirmDelete(){
         "deleteModal"
     );
 
-    if(
-        document.getElementById(
-            "detailsModal"
-        )
-    ){
-
-        renderDetailsTable();
-
-    }
+    renderDetailsTable();
 
 }
 
@@ -2205,9 +2197,7 @@ function togglePassword(
 ){
 
     const input =
-        document.getElementById(
-            inputId
-        );
+        document.getElementById(inputId);
 
     if(
         input.type === "password"
@@ -2259,9 +2249,7 @@ function closeModal(id){
 ========================================================= */
 
 document
-    .getElementById(
-        "settingsBtn"
-    )
+    .getElementById("settingsBtn")
     .addEventListener(
         "click",
         function(){
@@ -2279,9 +2267,7 @@ document
 ========================================================= */
 
 document
-    .querySelectorAll(
-        ".modal-overlay"
-    )
+    .querySelectorAll(".modal-overlay")
     .forEach(overlay=>{
 
         overlay.addEventListener(
@@ -2331,9 +2317,7 @@ function getCardCenter(el){
 function findNextCard(direction){
 
     const elements =
-        [...document.querySelectorAll(
-            ".card"
-        )];
+        [...document.querySelectorAll(".card")];
 
     if(elements.length === 0)
         return -1;
@@ -2345,9 +2329,7 @@ function findNextCard(direction){
         return -1;
 
     const c =
-        getCardCenter(
-            current
-        );
+        getCardCenter(current);
 
     let bestIndex =
         -1;
@@ -2456,9 +2438,7 @@ function findNextCard(direction){
 function moveSelection(direction){
 
     const next =
-        findNextCard(
-            direction
-        );
+        findNextCard(direction);
 
     if(next !== -1){
 
@@ -2468,9 +2448,7 @@ function moveSelection(direction){
         updateSelection();
 
         const card =
-            document.querySelectorAll(
-                ".card"
-            )[next];
+            document.querySelectorAll(".card")[next];
 
         if(card){
 
@@ -2525,9 +2503,7 @@ document.addEventListener(
 
                 event.preventDefault();
 
-                modalOpen.classList.remove(
-                    "show"
-                );
+                modalOpen.classList.remove("show");
 
             }
 
@@ -2540,9 +2516,7 @@ document.addEventListener(
 
             event.preventDefault();
 
-            moveSelection(
-                "right"
-            );
+            moveSelection("right");
 
             return;
 
@@ -2553,9 +2527,7 @@ document.addEventListener(
 
             event.preventDefault();
 
-            moveSelection(
-                "left"
-            );
+            moveSelection("left");
 
             return;
 
@@ -2566,9 +2538,7 @@ document.addEventListener(
 
             event.preventDefault();
 
-            moveSelection(
-                "down"
-            );
+            moveSelection("down");
 
             return;
 
@@ -2579,9 +2549,7 @@ document.addEventListener(
 
             event.preventDefault();
 
-            moveSelection(
-                "up"
-            );
+            moveSelection("up");
 
             return;
 
@@ -2597,9 +2565,7 @@ document.addEventListener(
 
             event.preventDefault();
 
-            openCard(
-                selectedIndex
-            );
+            openCard(selectedIndex);
 
             return;
 
@@ -2617,9 +2583,7 @@ document.addEventListener(
 
             event.preventDefault();
 
-            if(
-                window.history.length > 1
-            ){
+            if(window.history.length > 1){
 
                 window.history.back();
 
@@ -2638,14 +2602,10 @@ document.addEventListener(
 function updateWifiStatus(){
 
     const icon =
-        document.getElementById(
-            "wifiPath"
-        );
+        document.getElementById("wifiPath");
 
     const text =
-        document.getElementById(
-            "wifiText"
-        );
+        document.getElementById("wifiText");
 
 
     if(navigator.onLine){
