@@ -25,27 +25,21 @@
 <header>
 
     <div class="header-left">
-
         <div class="home-icon">⌂</div>
 
         <div>
             <div class="brand">Google TV™</div>
             <div class="subtitle">স্মার্ট তথ্য ব্যবস্থাপনা অ্যাপ</div>
         </div>
-
     </div>
 
-    <!-- HEADER CENTER PAGE NAME -->
-    <div class="header-center">
-        মিউজিক অ্যালবাম
-    </div>
+    <div class="header-center">সকল মিউজিক লিরিক</div>
 
     <div class="header-right">
 
         <div class="wifi-box">
 
             <svg id="wifiIcon" viewBox="0 0 24 24">
-
                 <path
                     id="wifiPath"
                     d="M2 8.5C7.5 3.8 16.5 3.8 22 8.5M5 12c3.9-3.3 10.1-3.3 14 0M8.5 15.5c2-1.7 5-1.7 7 0M12 19h.01"
@@ -54,11 +48,9 @@
                     stroke-width="2"
                     stroke-linecap="round"
                 />
-
             </svg>
 
             <span id="wifiText">অনলাইন</span>
-
         </div>
 
         <div class="clock" id="clock"></div>
@@ -81,7 +73,7 @@
 <div class="wave"></div>
 
 
-<!-- ================= SETTINGS MODAL ================= -->
+<!-- SETTINGS MODAL -->
 
 <div class="modal-overlay" id="settingsModal">
 
@@ -98,16 +90,9 @@
 
             <button
                 class="settings-option"
-                onclick="closeModal('settingsModal');openAddModal();"
+                onclick="openDetailsFromSettings()"
             >
-                ➕ কার্ড যুক্ত করুন
-            </button>
-
-            <button
-                class="settings-option"
-                onclick="closeModal('settingsModal');openDetailsModal();"
-            >
-                📋 সকল কার্ডের বিস্তারিত
+                📋 সকল কার্ডের বিস্তারিত দেখুন
             </button>
 
         </div>
@@ -117,139 +102,7 @@
 </div>
 
 
-<!-- ================= ADD / EDIT MODAL ================= -->
-
-<div class="modal-overlay" id="cardFormModal">
-
-    <div class="modal">
-
-        <button
-            class="modal-close"
-            onclick="closeModal('cardFormModal')"
-        >×</button>
-
-        <h2 id="formTitle">➕ নতুন কার্ড</h2>
-
-        <input type="hidden" id="editIndex">
-
-        <div class="form-group">
-
-            <label>কার্ডের নাম</label>
-
-            <input
-                id="cardTitle"
-                type="text"
-                placeholder="যেমন: নতুন কার্ড"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>সাবটাইটেল</label>
-
-            <input
-                id="cardSubtitle"
-                type="text"
-                placeholder="যেমন: নতুন তথ্য"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>আইকন / Emoji / JPG / PNG URL</label>
-
-            <input
-                id="cardIcon"
-                type="text"
-                placeholder="📺 অথবা https://example.com/icon.png"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>কার্ডের রং</label>
-
-            <select id="cardColor">
-
-                <option value="blue">নীল</option>
-                <option value="green">সবুজ</option>
-                <option value="purple">বেগুনি</option>
-                <option value="orange">কমলা</option>
-                <option value="cyan">সায়ান</option>
-                <option value="pink">গোলাপি</option>
-                <option value="teal">টিল</option>
-                <option value="royal">রয়্যাল</option>
-
-            </select>
-
-        </div>
-
-        <div class="form-group">
-
-            <label>কার্ডের URL</label>
-
-            <input
-                id="cardUrl"
-                type="text"
-                placeholder="https://example.com/page.html"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>
-                কার্ডের পাসওয়ার্ড
-                <span style="color:#9fb0d9;">
-                    (ঐচ্ছিক — খালি রাখলে সরাসরি ঢুকবে)
-                </span>
-            </label>
-
-            <div class="password-wrap">
-
-                <input
-                    id="cardPassword"
-                    type="password"
-                    placeholder="পাসওয়ার্ড দিন অথবা খালি রাখুন"
-                >
-
-                <button
-                    type="button"
-                    class="password-toggle"
-                    onclick="togglePassword('cardPassword',this)"
-                >👁️</button>
-
-            </div>
-
-        </div>
-
-        <div class="form-buttons">
-
-            <button
-                class="btn btn-cancel"
-                onclick="closeModal('cardFormModal')"
-            >
-                বাতিল
-            </button>
-
-            <button
-                class="btn btn-save"
-                onclick="saveCard()"
-            >
-                💾 সংরক্ষণ
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ================= PASSWORD MODAL ================= -->
+<!-- PASSWORD MODAL -->
 
 <div class="modal-overlay" id="passwordModal">
 
@@ -264,13 +117,9 @@
 
             <div class="lock-big">🔒</div>
 
-            <h2 id="passwordCardName">
-                পাসওয়ার্ড প্রয়োজন
-            </h2>
+            <h2 id="passwordCardName">পাসওয়ার্ড প্রয়োজন</h2>
 
-            <p>
-                এই কার্ডে প্রবেশ করতে পাসওয়ার্ড দিন
-            </p>
+            <p>এই কার্ডে প্রবেশ করতে পাসওয়ার্ড দিন</p>
 
             <div class="password-wrap">
 
@@ -289,10 +138,7 @@
 
             </div>
 
-            <div
-                class="error-message"
-                id="passwordError"
-            ></div>
+            <div class="error-message" id="passwordError"></div>
 
             <div class="form-buttons">
 
@@ -319,7 +165,7 @@
 </div>
 
 
-<!-- ================= DETAILS MODAL ================= -->
+<!-- DETAILS MODAL -->
 
 <div class="modal-overlay" id="detailsModal">
 
@@ -337,18 +183,13 @@
             <table>
 
                 <thead>
-
                     <tr>
-
                         <th>নং</th>
                         <th>কার্ডের নাম</th>
                         <th>সাবটাইটেল</th>
                         <th>পাসওয়ার্ড</th>
                         <th>URL</th>
-                        <th>অ্যাকশন</th>
-
                     </tr>
-
                 </thead>
 
                 <tbody id="detailsTableBody"></tbody>
@@ -362,55 +203,23 @@
 </div>
 
 
-<!-- ================= DELETE MODAL ================= -->
-
-<div class="modal-overlay" id="deleteModal">
-
-    <div class="modal">
-
-        <button
-            class="modal-close"
-            onclick="closeModal('deleteModal')"
-        >×</button>
-
-        <h2>🗑️ কার্ড মুছে ফেলবেন?</h2>
-
-        <p
-            id="deleteText"
-            style="
-                text-align:center;
-                color:#cbd6f4;
-                margin-bottom:20px;
-            "
-        ></p>
-
-        <div class="form-buttons">
-
-            <button
-                class="btn btn-cancel"
-                onclick="closeModal('deleteModal')"
-            >
-                বাতিল
-            </button>
-
-            <button
-                class="btn btn-delete"
-                onclick="confirmDelete()"
-            >
-                🗑️ মুছে ফেলুন
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
 <script>
 
 /* =========================================================
-   DEFAULT CARDS
+   APP ID
+
+   প্রতিটি HTML কপির জন্য আলাদা ID দিন।
+========================================================= */
+
+const APP_ID = "google-tv-copy-01";
+
+const STORAGE_PREFIX = "google-tv-app:" + APP_ID + ":";
+
+
+/* =========================================================
+   CARD CONFIGURATION
+
+   HTML থেকে কার্ড যুক্ত / পরিবর্তন / ডিলেট করবেন।
 ========================================================= */
 
 const defaultCards = [
@@ -426,154 +235,67 @@ const defaultCards = [
 
     {
         title:"আমার দিন গুলো",
-        subtitle:"হাবিব ওয়াহিদ,
-        icon:"https://masumbillah6778.github.io/images/music-cover-photo/habib-ohid.jpg"",
+        subtitle:"হাবিব ওয়াহিদ",
+        icon:"https://masumbillah6778.github.io/images/music-cover-photo/habib-ohid.jpg",
         color:"royal",
         url:"https://masumbillah6778.github.io/android-tv-apk/card/music-lyric/amar-din-gulo-sob.html",
         password:""
     },
 
     {
-        title:"সহা",
-        subtitle:"(সাহায্য নিন)",
-        icon:"ⓘ",
-        color:"royal",
-        url:"https://masumbillah6778.github.io/android-tv-apk/tv-v6.html",
-        password:""
+        title:"ব্যাক",
+        subtitle:"(ডাউনলোড/আপলোড)",
+        icon:"☁️",
+        color:"teal",
+        url:"#",
+        password:"1234"
     }
 
 ];
 
 
 /* =========================================================
-   LOCAL STORAGE
-   EACH HTML COPY GETS ITS OWN STORAGE KEY
+   SOURCE OF TRUTH
+
+   কার্ডের তালিকা HTML থেকেই আসবে।
+   LocalStorage কার্ডের তালিকাকে পরিবর্তন করবে না।
 ========================================================= */
 
-// একই ব্রাউজারে আলাদা HTML ফাইলের জন্য আলাদা Key
-const STORAGE_KEY =
-    "google_tv_dashboard_cards_v1_" +
-    encodeURIComponent(location.pathname);
-
-// পুরোনো সংস্করণের Storage Key
-const LEGACY_STORAGE_KEY =
-    "google_tv_dashboard_cards_v1";
-
-let cards = loadCards();
+let cards = defaultCards.map(card => ({ ...card }));
 
 
-function loadCards(){
+/* ELEMENTS */
 
-    try{
+const cardGrid = document.getElementById("cardGrid");
+const dashboard = document.getElementById("dashboard");
 
-        // প্রথমে এই HTML কপির নিজস্ব ডাটা দেখবে
-        const saved =
-            localStorage.getItem(STORAGE_KEY);
-
-        if(saved){
-
-            const parsed =
-                JSON.parse(saved);
-
-            if(Array.isArray(parsed)){
-
-                return parsed.map(card => ({
-
-                    ...card,
-
-                    password:
-                        card.password || ""
-
-                }));
-
-            }
-
-        }
-
-        // নিজস্ব ডাটা না থাকলে পুরোনো ডাটা কপি করবে
-        const oldSaved =
-            localStorage.getItem(
-                LEGACY_STORAGE_KEY
-            );
-
-        if(oldSaved){
-
-            const parsed =
-                JSON.parse(oldSaved);
-
-            if(Array.isArray(parsed)){
-
-                const migrated =
-                    parsed.map(card => ({
-
-                        ...card,
-
-                        password:
-                            card.password || ""
-
-                    }));
-
-                // পুরোনো ডাটা মুছে না দিয়ে নতুন Key-তে কপি
-                localStorage.setItem(
-                    STORAGE_KEY,
-                    JSON.stringify(migrated)
-                );
-
-                return migrated;
-
-            }
-
-        }
-
-    }catch(error){
-
-        console.log(
-            "Saved cards load error:",
-            error
-        );
-
-    }
-
-    // একেবারে নতুন কপি হলে Default Cards
-    return defaultCards.map(card => ({
-        ...card
-    }));
-
-}
-
-
-function saveCards(){
-
-    localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(cards)
-    );
-
-}
+let selectedIndex = 0;
+let pendingCardIndex = -1;
 
 
 /* =========================================================
-   ELEMENTS
+   ERROR DETECTION
 ========================================================= */
 
-const cardGrid =
-    document.getElementById("cardGrid");
+window.addEventListener("error", function(event) {
 
-const dashboard =
-    document.getElementById("dashboard");
+    console.error(
+        "APP ID:",
+        APP_ID,
+        "JavaScript Error:",
+        event.message,
+        "Line:",
+        event.lineno
+    );
 
-let selectedIndex = 0;
-
-let pendingCardIndex = -1;
-
-let deleteIndex = -1;
+});
 
 
 /* =========================================================
    ICON
 ========================================================= */
 
-function isImageUrl(value){
+function isImageUrl(value) {
 
     return /^https?:\/\/.+/i.test(
         String(value || "").trim()
@@ -582,41 +304,31 @@ function isImageUrl(value){
 }
 
 
-function createIcon(value){
+function createIcon(value) {
 
-    const box =
-        document.createElement("div");
+    const box = document.createElement("div");
 
-    box.className =
-        "card-icon";
+    box.className = "card-icon";
 
-    if(isImageUrl(value)){
+    if (isImageUrl(value)) {
 
-        const img =
-            document.createElement("img");
+        const img = document.createElement("img");
 
-        img.src =
-            value;
-
+        img.src = value;
         img.alt = "";
 
-        img.onerror =
-            function(){
+        img.onerror = function() {
 
-                this.style.display =
-                    "none";
+            this.style.display = "none";
+            box.textContent = "📺";
 
-                box.textContent =
-                    "📺";
-
-            };
+        };
 
         box.appendChild(img);
 
-    }else{
+    } else {
 
-        box.textContent =
-            value || "📺";
+        box.textContent = value || "📺";
 
     }
 
@@ -629,118 +341,87 @@ function createIcon(value){
    RENDER CARDS
 ========================================================= */
 
-function renderCards(){
+function renderCards() {
 
     cardGrid.innerHTML = "";
 
-    cards.forEach((card,index)=>{
+    cards.forEach((card,index) => {
 
-        const a =
-            document.createElement("a");
+        const a = document.createElement("a");
 
         a.href = "#";
 
-        a.className =
-            "card " +
-            (card.color || "blue");
+        a.className = "card " + (card.color || "blue");
 
-        a.dataset.index =
-            index;
+        a.dataset.index = index;
 
-        a.addEventListener(
-            "click",
-            function(event){
+        a.addEventListener("click",function(event) {
 
-                event.preventDefault();
+            event.preventDefault();
 
-                selectedIndex =
-                    index;
+            selectedIndex = index;
 
-                updateSelection();
+            updateSelection();
 
-                openCard(index);
+            openCard(index);
 
-            }
-        );
+        });
 
 
-        const icon =
-            createIcon(card.icon);
-
-        a.appendChild(icon);
+        a.appendChild(createIcon(card.icon));
 
 
-        const title =
-            document.createElement("div");
+        const title = document.createElement("div");
 
-        title.className =
-            "card-title";
+        title.className = "card-title";
 
-        title.textContent =
-            card.title ||
-            "নতুন কার্ড";
+        title.textContent = card.title || "নতুন কার্ড";
 
         a.appendChild(title);
 
 
-        const subtitle =
-            document.createElement("div");
+        const subtitle = document.createElement("div");
 
-        subtitle.className =
-            "card-subtitle";
+        subtitle.className = "card-subtitle";
 
-        subtitle.textContent =
-            card.subtitle ||
-            "";
+        subtitle.textContent = card.subtitle || "";
 
         a.appendChild(subtitle);
 
 
-        // পাসওয়ার্ড থাকলেই শুধু Lock দেখাবে
-        if(
-            String(card.password || "").trim() !== ""
-        ){
+        if (String(card.password || "").trim() !== "") {
 
-            const lock =
-                document.createElement("button");
+            const lock = document.createElement("button");
 
-            lock.type =
-                "button";
+            lock.type = "button";
 
-            lock.className =
-                "card-lock";
+            lock.className = "card-lock";
 
-            lock.textContent =
-                "🔒";
+            lock.textContent = "🔒";
 
-            lock.title =
-                "পাসওয়ার্ডযুক্ত কার্ড";
+            lock.title = "পাসওয়ার্ডযুক্ত কার্ড";
 
-            lock.addEventListener(
-                "click",
-                function(event){
+            lock.addEventListener("click",function(event) {
 
-                    event.preventDefault();
+                event.preventDefault();
 
-                    event.stopPropagation();
+                event.stopPropagation();
 
-                    selectedIndex =
-                        index;
+                selectedIndex = index;
 
-                    openPasswordModal(index);
+                updateSelection();
 
-                }
-            );
+                openPasswordModal(index);
+
+            });
 
             a.appendChild(lock);
 
         }
 
-
         cardGrid.appendChild(a);
 
     });
-
 
     updateSelection();
 
@@ -751,12 +432,11 @@ function renderCards(){
    SELECTION
 ========================================================= */
 
-function updateSelection(){
+function updateSelection() {
 
-    const all =
-        document.querySelectorAll(".card");
+    const all = document.querySelectorAll(".card");
 
-    all.forEach((card,index)=>{
+    all.forEach((card,index) => {
 
         card.classList.toggle(
             "selected",
@@ -772,21 +452,17 @@ function updateSelection(){
    OPEN CARD
 ========================================================= */
 
-function openCard(index){
+function openCard(index) {
 
-    if(!cards[index])
-        return;
+    if (!cards[index]) return;
 
-    const card =
-        cards[index];
+    const card = cards[index];
 
-    if(
-        String(card.password || "").trim() === ""
-    ){
+    if (String(card.password || "").trim() === "") {
 
         navigateToCard(index);
 
-    }else{
+    } else {
 
         openPasswordModal(index);
 
@@ -795,17 +471,15 @@ function openCard(index){
 }
 
 
-function navigateToCard(index){
+function navigateToCard(index) {
 
-    const card =
-        cards[index];
+    const card = cards[index];
 
-    if(card && card.url){
+    if (!card || !card.url) return;
 
-        window.location.href =
-            card.url;
+    if (card.url === "#") return;
 
-    }
+    window.location.href = card.url;
 
 }
 
@@ -814,16 +488,13 @@ function navigateToCard(index){
    PASSWORD MODAL
 ========================================================= */
 
-function openPasswordModal(index){
+function openPasswordModal(index) {
 
-    pendingCardIndex =
-        index;
+    pendingCardIndex = index;
 
     document.getElementById(
         "passwordCardName"
-    ).textContent =
-        cards[index].title ||
-        "কার্ড";
+    ).textContent = cards[index].title || "কার্ড";
 
     document.getElementById(
         "enterPassword"
@@ -835,7 +506,7 @@ function openPasswordModal(index){
 
     showModal("passwordModal");
 
-    setTimeout(()=>{
+    setTimeout(() => {
 
         document.getElementById(
             "enterPassword"
@@ -846,50 +517,44 @@ function openPasswordModal(index){
 }
 
 
-function checkPassword(){
+function checkPassword() {
 
-    if(pendingCardIndex < 0)
-        return;
+    if (pendingCardIndex < 0) return;
 
-    const card =
-        cards[pendingCardIndex];
+    const card = cards[pendingCardIndex];
+
+    if (!card) return;
 
     const entered =
-        document.getElementById(
-            "enterPassword"
-        ).value;
+        document.getElementById("enterPassword").value;
 
-    if(entered === card.password){
+    if (entered === card.password) {
 
         document.getElementById(
             "passwordError"
         ).textContent = "";
 
+        const index = pendingCardIndex;
+
         closeModal("passwordModal");
 
-        navigateToCard(
-            pendingCardIndex
-        );
+        pendingCardIndex = -1;
 
-    }else{
+        navigateToCard(index);
+
+    } else {
 
         const error =
-            document.getElementById(
-                "passwordError"
-            );
+            document.getElementById("passwordError");
 
         error.textContent =
             "আপনি ভুল পাসওয়ার্ড দিয়েছেন";
 
-        error.style.color =
-            "#ff3d3d";
+        error.style.color = "#ff3d3d";
 
-        try{
+        try {
 
-            if(
-                "speechSynthesis"
-                in window
-            ){
+            if ("speechSynthesis" in window) {
 
                 window.speechSynthesis.cancel();
 
@@ -898,19 +563,15 @@ function checkPassword(){
                         "আপনি ভুল পাসওয়ার্ড দিয়েছেন"
                     );
 
-                speech.lang =
-                    "bn-BD";
+                speech.lang = "bn-BD";
 
-                speech.rate =
-                    0.9;
+                speech.rate = 0.9;
 
-                window.speechSynthesis.speak(
-                    speech
-                );
+                window.speechSynthesis.speak(speech);
 
             }
 
-        }catch(e){}
+        } catch(e) {}
 
         document.getElementById(
             "enterPassword"
@@ -922,510 +583,104 @@ function checkPassword(){
 
 
 /* =========================================================
-   ADD CARD
+   DETAILS: READ ONLY
 ========================================================= */
 
-function openAddModal(){
+function openDetailsFromSettings() {
 
-    document.getElementById(
-        "formTitle"
-    ).textContent =
-        "➕ নতুন কার্ড";
-
-    document.getElementById(
-        "editIndex"
-    ).value = "";
-
-    document.getElementById(
-        "cardTitle"
-    ).value = "";
-
-    document.getElementById(
-        "cardSubtitle"
-    ).value = "";
-
-    document.getElementById(
-        "cardIcon"
-    ).value = "📺";
-
-    document.getElementById(
-        "cardColor"
-    ).value = "blue";
-
-    document.getElementById(
-        "cardUrl"
-    ).value = "";
-
-    document.getElementById(
-        "cardPassword"
-    ).value = "";
-
-    document.getElementById(
-        "cardPassword"
-    ).type =
-        "password";
-
-    showModal(
-        "cardFormModal"
-    );
-
-    setTimeout(()=>{
-
-        document.getElementById(
-            "cardTitle"
-        ).focus();
-
-    },100);
-
-}
-
-
-/* =========================================================
-   EDIT CARD
-========================================================= */
-
-function editCard(index){
-
-    const card =
-        cards[index];
-
-    if(!card)
-        return;
-
-    document.getElementById(
-        "formTitle"
-    ).textContent =
-        "✏️ কার্ড এডিট করুন";
-
-    document.getElementById(
-        "editIndex"
-    ).value =
-        index;
-
-    document.getElementById(
-        "cardTitle"
-    ).value =
-        card.title || "";
-
-    document.getElementById(
-        "cardSubtitle"
-    ).value =
-        card.subtitle || "";
-
-    document.getElementById(
-        "cardIcon"
-    ).value =
-        card.icon || "📺";
-
-    document.getElementById(
-        "cardColor"
-    ).value =
-        card.color || "blue";
-
-    document.getElementById(
-        "cardUrl"
-    ).value =
-        card.url || "";
-
-    document.getElementById(
-        "cardPassword"
-    ).value =
-        card.password || "";
-
-    document.getElementById(
-        "cardPassword"
-    ).type =
-        "password";
-
-    showModal(
-        "cardFormModal"
-    );
-
-}
-
-
-/* =========================================================
-   SAVE CARD
-========================================================= */
-
-function saveCard(){
-
-    const title =
-        document.getElementById(
-            "cardTitle"
-        ).value.trim();
-
-    const subtitle =
-        document.getElementById(
-            "cardSubtitle"
-        ).value.trim();
-
-    const icon =
-        document.getElementById(
-            "cardIcon"
-        ).value.trim();
-
-    const color =
-        document.getElementById(
-            "cardColor"
-        ).value;
-
-    const url =
-        document.getElementById(
-            "cardUrl"
-        ).value.trim();
-
-    const password =
-        document.getElementById(
-            "cardPassword"
-        ).value;
-
-    if(!title){
-
-        alert(
-            "কার্ডের নাম লিখুন"
-        );
-
-        document.getElementById(
-            "cardTitle"
-        ).focus();
-
-        return;
-
-    }
-
-
-    const editIndex =
-        document.getElementById(
-            "editIndex"
-        ).value;
-
-
-    const newCard = {
-
-        title:title,
-
-        subtitle:subtitle,
-
-        icon:
-            icon || "📺",
-
-        color:color,
-
-        url:
-            url || "#",
-
-        password:
-            password
-
-    };
-
-
-    if(editIndex === ""){
-
-        cards.push(
-            newCard
-        );
-
-        selectedIndex =
-            cards.length - 1;
-
-    }else{
-
-        cards[
-            Number(editIndex)
-        ] =
-            newCard;
-
-        selectedIndex =
-            Number(editIndex);
-
-    }
-
-
-    saveCards();
-
-    renderCards();
-
-    closeModal(
-        "cardFormModal"
-    );
-
-}
-
-
-/* =========================================================
-   DETAILS TABLE
-========================================================= */
-
-function openDetailsModal(){
+    closeModal("settingsModal");
 
     renderDetailsTable();
 
-    showModal(
-        "detailsModal"
-    );
+    showModal("detailsModal");
 
 }
 
 
-function renderDetailsTable(){
+function renderDetailsTable() {
 
     const tbody =
-        document.getElementById(
-            "detailsTableBody"
-        );
+        document.getElementById("detailsTableBody");
 
     tbody.innerHTML = "";
 
+    cards.forEach((card,index) => {
 
-    cards.forEach((card,index)=>{
-
-        const tr =
-            document.createElement("tr");
+        const tr = document.createElement("tr");
 
 
-        // নং
-        const noTd =
-            document.createElement("td");
+        const noTd = document.createElement("td");
 
-        noTd.textContent =
-            index + 1;
+        noTd.textContent = index + 1;
 
         tr.appendChild(noTd);
 
 
-        // নাম
-        const nameTd =
-            document.createElement("td");
+        const nameTd = document.createElement("td");
 
-        nameTd.textContent =
-            card.title || "";
+        nameTd.textContent = card.title || "";
 
         tr.appendChild(nameTd);
 
 
-        // সাবটাইটেল
-        const subTd =
-            document.createElement("td");
+        const subTd = document.createElement("td");
 
-        subTd.textContent =
-            card.subtitle || "";
+        subTd.textContent = card.subtitle || "";
 
         tr.appendChild(subTd);
 
 
-        // PASSWORD
-        const passwordTd =
-            document.createElement("td");
+        const passwordTd = document.createElement("td");
 
-        const passwordValue =
-            document.createElement("span");
+        const passwordValue = document.createElement("span");
 
-        passwordValue.className =
-            "password-value";
+        passwordValue.className = "password-value";
 
 
-        if(
-            String(card.password || "").trim() !== ""
-        ){
+        if (String(card.password || "").trim() !== "") {
 
-            passwordValue.textContent =
-                "••••••";
+            passwordValue.textContent = "••••••";
 
-        }else{
+        } else {
 
-            passwordValue.textContent =
-                "পাসওয়ার্ড নেই";
+            passwordValue.textContent = "পাসওয়ার্ড নেই";
 
-            passwordValue.style.color =
-                "#9aa9ca";
+            passwordValue.style.color = "#9aa9ca";
 
         }
 
-        passwordTd.appendChild(
-            passwordValue
-        );
+        passwordTd.appendChild(passwordValue);
 
         tr.appendChild(passwordTd);
 
 
-        // URL
-        const urlTd =
-            document.createElement("td");
+        const urlTd = document.createElement("td");
 
-        if(card.url){
+        if (card.url) {
 
-            const urlText =
-                document.createElement("span");
+            const urlText = document.createElement("span");
 
-            urlText.textContent =
-                card.url;
+            urlText.textContent = card.url;
 
-            urlText.style.maxWidth =
-                "250px";
+            urlText.style.maxWidth = "350px";
 
-            urlText.style.display =
-                "inline-block";
+            urlText.style.display = "inline-block";
 
-            urlText.style.overflow =
-                "hidden";
+            urlText.style.overflow = "hidden";
 
-            urlText.style.textOverflow =
-                "ellipsis";
+            urlText.style.textOverflow = "ellipsis";
 
-            urlText.style.whiteSpace =
-                "nowrap";
+            urlText.style.whiteSpace = "nowrap";
 
             urlTd.appendChild(urlText);
 
-        }else{
+        } else {
 
-            urlTd.textContent =
-                "—";
+            urlTd.textContent = "—";
 
         }
 
         tr.appendChild(urlTd);
-
-
-        // ACTION
-        const actionTd =
-            document.createElement("td");
-
-        const actions =
-            document.createElement("div");
-
-        actions.className =
-            "table-actions";
-
-
-        // EYE
-        if(
-            String(card.password || "").trim() !== ""
-        ){
-
-            const eyeBtn =
-                document.createElement("button");
-
-            eyeBtn.type =
-                "button";
-
-            eyeBtn.className =
-                "table-action eye";
-
-            eyeBtn.textContent =
-                "👁️";
-
-            eyeBtn.title =
-                "পাসওয়ার্ড দেখুন";
-
-
-            eyeBtn.onclick =
-                function(){
-
-                    if(
-                        passwordValue.dataset.visible
-                        === "1"
-                    ){
-
-                        passwordValue.textContent =
-                            "••••••";
-
-                        passwordValue.dataset.visible =
-                            "0";
-
-                        eyeBtn.textContent =
-                            "👁️";
-
-                        eyeBtn.title =
-                            "পাসওয়ার্ড দেখুন";
-
-                    }else{
-
-                        passwordValue.textContent =
-                            card.password;
-
-                        passwordValue.dataset.visible =
-                            "1";
-
-                        eyeBtn.textContent =
-                            "🙈";
-
-                        eyeBtn.title =
-                            "পাসওয়ার্ড লুকান";
-
-                    }
-
-                };
-
-
-            actions.appendChild(eyeBtn);
-
-        }
-
-
-        // EDIT
-        const editBtn =
-            document.createElement("button");
-
-        editBtn.type =
-            "button";
-
-        editBtn.className =
-            "table-action edit";
-
-        editBtn.textContent =
-            "✏️";
-
-        editBtn.title =
-            "এডিট";
-
-        editBtn.onclick =
-            function(){
-
-                closeModal(
-                    "detailsModal"
-                );
-
-                editCard(index);
-
-            };
-
-
-        actions.appendChild(editBtn);
-
-
-        // DELETE
-        const deleteBtn =
-            document.createElement("button");
-
-        deleteBtn.type =
-            "button";
-
-        deleteBtn.className =
-            "table-action delete";
-
-        deleteBtn.textContent =
-            "🗑️";
-
-        deleteBtn.title =
-            "ডিলিট";
-
-        deleteBtn.onclick =
-            function(){
-
-                openDeleteModal(index);
-
-            };
-
-
-        actions.appendChild(deleteBtn);
-
-
-        actionTd.appendChild(actions);
-
-        tr.appendChild(actionTd);
 
         tbody.appendChild(tr);
 
@@ -1435,92 +690,24 @@ function renderDetailsTable(){
 
 
 /* =========================================================
-   DELETE
-========================================================= */
-
-function openDeleteModal(index){
-
-    deleteIndex =
-        index;
-
-    document.getElementById(
-        "deleteText"
-    ).textContent =
-        `"${cards[index].title}" কার্ডটি মুছে ফেলতে চান?`;
-
-    showModal(
-        "deleteModal"
-    );
-
-}
-
-
-function confirmDelete(){
-
-    if(deleteIndex < 0)
-        return;
-
-    cards.splice(
-        deleteIndex,
-        1
-    );
-
-    if(cards.length === 0){
-
-        selectedIndex =
-            0;
-
-    }else if(
-        selectedIndex >= cards.length
-    ){
-
-        selectedIndex =
-            cards.length - 1;
-
-    }
-
-    saveCards();
-
-    renderCards();
-
-    closeModal(
-        "deleteModal"
-    );
-
-    renderDetailsTable();
-
-}
-
-
-/* =========================================================
    PASSWORD EYE
 ========================================================= */
 
-function togglePassword(
-    inputId,
-    button
-){
+function togglePassword(inputId,button) {
 
-    const input =
-        document.getElementById(inputId);
+    const input = document.getElementById(inputId);
 
-    if(
-        input.type === "password"
-    ){
+    if (input.type === "password") {
 
-        input.type =
-            "text";
+        input.type = "text";
 
-        button.textContent =
-            "🙈";
+        button.textContent = "🙈";
 
-    }else{
+    } else {
 
-        input.type =
-            "password";
+        input.type = "password";
 
-        button.textContent =
-            "👁️";
+        button.textContent = "👁️";
 
     }
 
@@ -1531,7 +718,7 @@ function togglePassword(
    MODAL
 ========================================================= */
 
-function showModal(id){
+function showModal(id) {
 
     document
         .getElementById(id)
@@ -1540,7 +727,7 @@ function showModal(id){
 }
 
 
-function closeModal(id){
+function closeModal(id) {
 
     document
         .getElementById(id)
@@ -1549,48 +736,32 @@ function closeModal(id){
 }
 
 
-/* =========================================================
-   SETTINGS
-========================================================= */
+/* SETTINGS BUTTON */
 
 document
     .getElementById("settingsBtn")
-    .addEventListener(
-        "click",
-        function(){
+    .addEventListener("click",function() {
 
-            showModal(
-                "settingsModal"
-            );
+        showModal("settingsModal");
 
-        }
-    );
+    });
 
 
-/* =========================================================
-   OUTSIDE CLICK
-========================================================= */
+/* OUTSIDE CLICK */
 
 document
     .querySelectorAll(".modal-overlay")
-    .forEach(overlay=>{
+    .forEach(overlay => {
 
-        overlay.addEventListener(
-            "click",
-            function(event){
+        overlay.addEventListener("click",function(event) {
 
-                if(
-                    event.target === overlay
-                ){
+            if (event.target === overlay) {
 
-                    overlay.classList.remove(
-                        "show"
-                    );
-
-                }
+                overlay.classList.remove("show");
 
             }
-        );
+
+        });
 
     });
 
@@ -1599,163 +770,126 @@ document
    TV REMOTE NAVIGATION
 ========================================================= */
 
-function getCardCenter(el){
+function getCardCenter(el) {
 
-    const r =
-        el.getBoundingClientRect();
+    const r = el.getBoundingClientRect();
 
     return {
 
-        x:
-            r.left +
-            r.width / 2,
+        x: r.left + r.width / 2,
 
-        y:
-            r.top +
-            r.height / 2
+        y: r.top + r.height / 2
 
     };
 
 }
 
 
-function findNextCard(direction){
+function findNextCard(direction) {
 
     const elements =
         [...document.querySelectorAll(".card")];
 
-    if(elements.length === 0)
-        return -1;
+    if (elements.length === 0) return -1;
 
-    const current =
-        elements[selectedIndex];
+    const current = elements[selectedIndex];
 
-    if(!current)
-        return -1;
+    if (!current) return -1;
 
-    const c =
-        getCardCenter(current);
+    const c = getCardCenter(current);
 
-    let bestIndex =
-        -1;
+    let bestIndex = -1;
 
-    let bestScore =
-        Infinity;
+    let bestScore = Infinity;
 
 
-    elements.forEach(
-        (el,index)=>{
+    elements.forEach((el,index) => {
 
-            if(index === selectedIndex)
-                return;
+        if (index === selectedIndex) return;
 
-            const p =
-                getCardCenter(el);
+        const p = getCardCenter(el);
 
-            const dx =
-                p.x - c.x;
+        const dx = p.x - c.x;
 
-            const dy =
-                p.y - c.y;
+        const dy = p.y - c.y;
 
-            let primary;
+        let primary;
 
-            let secondary;
+        let secondary;
 
 
-            if(direction === "right"){
+        if (direction === "right") {
 
-                if(dx <= 5)
-                    return;
+            if (dx <= 5) return;
 
-                primary =
-                    dx;
+            primary = dx;
 
-                secondary =
-                    Math.abs(dy);
-
-            }
-
-            else if(direction === "left"){
-
-                if(dx >= -5)
-                    return;
-
-                primary =
-                    -dx;
-
-                secondary =
-                    Math.abs(dy);
-
-            }
-
-            else if(direction === "down"){
-
-                if(dy <= 5)
-                    return;
-
-                primary =
-                    dy;
-
-                secondary =
-                    Math.abs(dx);
-
-            }
-
-            else if(direction === "up"){
-
-                if(dy >= -5)
-                    return;
-
-                primary =
-                    -dy;
-
-                secondary =
-                    Math.abs(dx);
-
-            }
-
-
-            const score =
-                primary * 10 +
-                secondary;
-
-
-            if(score < bestScore){
-
-                bestScore =
-                    score;
-
-                bestIndex =
-                    index;
-
-            }
+            secondary = Math.abs(dy);
 
         }
-    );
 
+        else if (direction === "left") {
+
+            if (dx >= -5) return;
+
+            primary = -dx;
+
+            secondary = Math.abs(dy);
+
+        }
+
+        else if (direction === "down") {
+
+            if (dy <= 5) return;
+
+            primary = dy;
+
+            secondary = Math.abs(dx);
+
+        }
+
+        else if (direction === "up") {
+
+            if (dy >= -5) return;
+
+            primary = -dy;
+
+            secondary = Math.abs(dx);
+
+        }
+
+
+        const score = primary * 10 + secondary;
+
+        if (score < bestScore) {
+
+            bestScore = score;
+
+            bestIndex = index;
+
+        }
+
+    });
 
     return bestIndex;
 
 }
 
 
-function moveSelection(direction){
+function moveSelection(direction) {
 
-    const next =
-        findNextCard(direction);
+    const next = findNextCard(direction);
 
-    if(next !== -1){
+    if (next !== -1) {
 
-        selectedIndex =
-            next;
+        selectedIndex = next;
 
         updateSelection();
 
         const card =
             document.querySelectorAll(".card")[next];
 
-        if(card){
+        if (card) {
 
             card.scrollIntoView({
 
@@ -1778,206 +912,177 @@ function moveSelection(direction){
    TV REMOTE KEYBOARD
 ========================================================= */
 
-document.addEventListener(
-    "keydown",
-    function(event){
+document.addEventListener("keydown",function(event) {
 
-        const key =
-            event.key;
+    const key = event.key;
 
-        const code =
-            event.keyCode;
+    const code = event.keyCode;
 
-
-        const modalOpen =
-            document.querySelector(
-                ".modal-overlay.show"
-            );
+    const modalOpen =
+        document.querySelector(".modal-overlay.show");
 
 
-        if(modalOpen){
+    if (modalOpen) {
 
-            if(
-                key === "Escape" ||
-                key === "Backspace" ||
-                key === "BrowserBack" ||
-                key === "GoBack" ||
-                code === 4 ||
-                code === 10009
-            ){
-
-                event.preventDefault();
-
-                modalOpen.classList.remove("show");
-
-            }
-
-            return;
-
-        }
-
-
-        if(key === "ArrowRight"){
-
-            event.preventDefault();
-
-            moveSelection("right");
-
-            return;
-
-        }
-
-
-        if(key === "ArrowLeft"){
-
-            event.preventDefault();
-
-            moveSelection("left");
-
-            return;
-
-        }
-
-
-        if(key === "ArrowDown"){
-
-            event.preventDefault();
-
-            moveSelection("down");
-
-            return;
-
-        }
-
-
-        if(key === "ArrowUp"){
-
-            event.preventDefault();
-
-            moveSelection("up");
-
-            return;
-
-        }
-
-
-        if(
-            key === "Enter" ||
-            key === " " ||
-            code === 13 ||
-            code === 23
-        ){
-
-            event.preventDefault();
-
-            openCard(selectedIndex);
-
-            return;
-
-        }
-
-
-        if(
+        if (
             key === "Escape" ||
             key === "Backspace" ||
             key === "BrowserBack" ||
             key === "GoBack" ||
             code === 4 ||
             code === 10009
-        ){
+        ) {
 
             event.preventDefault();
 
-            if(window.history.length > 1){
+            modalOpen.classList.remove("show");
 
-                window.history.back();
+        }
 
-            }
+        return;
+
+    }
+
+
+    if (key === "ArrowRight") {
+
+        event.preventDefault();
+
+        moveSelection("right");
+
+        return;
+
+    }
+
+
+    if (key === "ArrowLeft") {
+
+        event.preventDefault();
+
+        moveSelection("left");
+
+        return;
+
+    }
+
+
+    if (key === "ArrowDown") {
+
+        event.preventDefault();
+
+        moveSelection("down");
+
+        return;
+
+    }
+
+
+    if (key === "ArrowUp") {
+
+        event.preventDefault();
+
+        moveSelection("up");
+
+        return;
+
+    }
+
+
+    if (
+        key === "Enter" ||
+        key === " " ||
+        code === 13 ||
+        code === 23
+    ) {
+
+        event.preventDefault();
+
+        openCard(selectedIndex);
+
+        return;
+
+    }
+
+
+    if (
+        key === "Escape" ||
+        key === "Backspace" ||
+        key === "BrowserBack" ||
+        key === "GoBack" ||
+        code === 4 ||
+        code === 10009
+    ) {
+
+        event.preventDefault();
+
+        if (window.history.length > 1) {
+
+            window.history.back();
 
         }
 
     }
-);
+
+});
 
 
 /* =========================================================
    WIFI
 ========================================================= */
 
-function updateWifiStatus(){
+function updateWifiStatus() {
 
-    const icon =
-        document.getElementById("wifiPath");
+    const icon = document.getElementById("wifiPath");
 
-    const text =
-        document.getElementById("wifiText");
+    const text = document.getElementById("wifiText");
 
 
-    if(navigator.onLine){
+    if (navigator.onLine) {
 
-        icon.setAttribute(
-            "stroke",
-            "#45e68a"
-        );
+        icon.setAttribute("stroke","#45e68a");
 
-        text.textContent =
-            "অনলাইন";
+        text.textContent = "অনলাইন";
 
-        text.style.color =
-            "#45e68a";
+        text.style.color = "#45e68a";
 
-    }else{
+    } else {
 
-        icon.setAttribute(
-            "stroke",
-            "#ff3d3d"
-        );
+        icon.setAttribute("stroke","#ff3d3d");
 
-        text.textContent =
-            "অফলাইন";
+        text.textContent = "অফলাইন";
 
-        text.style.color =
-            "#ff3d3d";
+        text.style.color = "#ff3d3d";
 
     }
 
 }
 
 
-window.addEventListener(
-    "online",
-    updateWifiStatus
-);
+window.addEventListener("online",updateWifiStatus);
 
-window.addEventListener(
-    "offline",
-    updateWifiStatus
-);
+window.addEventListener("offline",updateWifiStatus);
 
 
 /* =========================================================
    CLOCK
 ========================================================= */
 
-function updateClock(){
+function updateClock() {
 
-    const now =
-        new Date();
+    const now = new Date();
 
     const time =
-        now.toLocaleTimeString(
-            "en-US",
-            {
-                hour:"numeric",
-                minute:"2-digit",
-                hour12:true
-            }
-        );
+        now.toLocaleTimeString("en-US",{
 
-    document.getElementById(
-        "clock"
-    ).textContent =
-        time;
+            hour:"numeric",
+
+            minute:"2-digit",
+
+            hour12:true
+
+        });
+
+    document.getElementById("clock").textContent = time;
 
 }
 
@@ -1986,74 +1091,32 @@ function updateClock(){
    INITIAL LOAD
 ========================================================= */
 
-renderCards();
-
-updateWifiStatus();
-
-updateClock();
-
-setInterval(
-    updateClock,
-    1000
-);
-
-setTimeout(()=>{
-
-    dashboard.focus();
-
-},200);
-
-
-/* =========================================================
-   OPTIONAL ADD CARD FUNCTION
-========================================================= */
-
-window.addNewCard =
-function(
-    title,
-    subtitle,
-    icon,
-    color,
-    url,
-    password=""
-){
-
-    cards.push({
-
-        title:
-            title ||
-            "নতুন কার্ড",
-
-        subtitle:
-            subtitle ||
-            "(নতুন তথ্য)",
-
-        icon:
-            icon ||
-            "📺",
-
-        color:
-            color ||
-            "blue",
-
-        url:
-            url ||
-            "#",
-
-        password:
-            password ||
-            ""
-
-    });
-
-    selectedIndex =
-        cards.length - 1;
-
-    saveCards();
+try {
 
     renderCards();
 
-};
+    updateWifiStatus();
+
+    updateClock();
+
+    setInterval(updateClock,1000);
+
+    setTimeout(() => {
+
+        dashboard.focus();
+
+    },200);
+
+} catch(error) {
+
+    console.error(
+        "APP ID:",
+        APP_ID,
+        "INITIAL LOAD ERROR:",
+        error
+    );
+
+}
 
 </script>
 
